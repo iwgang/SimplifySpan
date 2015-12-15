@@ -2,7 +2,7 @@
 [![@iwgang](https://img.shields.io/badge/weibo-%40iwgang-blue.svg)](http://weibo.com/iwgang)
 
 # SimplifySpan
-A A easy-to-use and powerful Spannable library
+A easy-to-use and powerful Spannable library
 
 ### screenshot
 ![](https://raw.githubusercontent.com/iwgang/SimplifySpan/master/screenshot/s1.png)   
