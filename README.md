@@ -1,3 +1,4 @@
+[![Android Gems](http://www.android-gems.com/badge/iwgang/SimplifySpan.svg?branch=master)](http://www.android-gems.com/lib/iwgang/SimplifySpan)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-SimplifySpan-green.svg?style=true)](http://android-arsenal.com/details/1/2907)
 [![@iwgang](https://img.shields.io/badge/weibo-%40iwgang-blue.svg)](http://weibo.com/iwgang)
 
@@ -9,7 +10,7 @@ A easy-to-use and powerful Spannable library
 ![](https://raw.githubusercontent.com/iwgang/SimplifySpan/master/screenshot/s2.gif)  
 
 ### gradle
-    compile 'com.github.iwgang:simplifyspan:1.0'
+    compile 'com.github.iwgang:simplifyspan:1.0.1'
     
 ### Support Units
 * SpecialTextUnit

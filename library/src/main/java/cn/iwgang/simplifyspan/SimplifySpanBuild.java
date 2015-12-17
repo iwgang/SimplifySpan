@@ -117,18 +117,22 @@ public class SimplifySpanBuild {
                     break;
             }
 
-            // 处理需要剔除的内容
+            int[] startPossTemp = st.getStartPoss();
+            if (null == startPossTemp || startPossTemp.length == 0) continue ;
+
+            // excluding content
             if (st instanceof SpecialTextUnit) {
                 SpecialTextUnit specialTextUnit = (SpecialTextUnit)st;
+
                 if (specialTextUnit.getTextSize() > 0) {
-                    if (st.getStartPoss().length > 1) {
+                    if (startPossTemp.length > 1) {
                         delTextTagMap.put(specialText, true);
                     } else {
                         delTextTagMap.put(specialText, false);
                     }
                 }
             } else if (st instanceof SpecialImageUnit || st instanceof SpecialLabelUnit) {
-                if (st.getStartPoss().length > 1) {
+                if (startPossTemp.length > 1) {
                     delTextTagMap.put(specialText, true);
                 } else {
                     delTextTagMap.put(specialText, false);
@@ -244,9 +248,13 @@ public class SimplifySpanBuild {
             // reset SpecialUnit start pos
             if (!mFinalSpecialUnit.isEmpty()) {
                 for (BaseSpecialUnit specialUnit : mFinalSpecialUnit) {
-                    for (int i = 0; i < specialUnit.getStartPoss().length; i++) {
-                        int oldStartPos = specialUnit.getStartPoss()[i];
-                        specialUnit.getStartPoss()[i] = oldStartPos + mBeforeStringBuilder.length();
+                    int[] tempStartPoss = specialUnit.getStartPoss();
+
+                    if (null == tempStartPoss || tempStartPoss.length == 0) continue ;
+
+                    for (int i = 0; i < tempStartPoss.length; i++) {
+                        int oldStartPos = tempStartPoss[i];
+                        tempStartPoss[i] = oldStartPos + mBeforeStringBuilder.length();
                     }
                 }
             }
@@ -266,8 +274,9 @@ public class SimplifySpanBuild {
         boolean isInitClickListener = false;
         for (BaseSpecialUnit st : mFinalSpecialUnit) {
             String specialText = st.getSpecialText();
+            int[] startPoss = st.getStartPoss();
 
-            if (TextUtils.isEmpty(specialText)) continue;
+            if (TextUtils.isEmpty(specialText) || null == startPoss || startPoss.length == 0) continue;
 
             int specialTextLength = specialText.length();
 
@@ -277,7 +286,7 @@ public class SimplifySpanBuild {
 
                 final OnClickableSpanListener onClickListener = specialTextUnit.getOnClickListener();
 
-                for (int startPos : specialTextUnit.getStartPoss()) {
+                for (int startPos : startPoss) {
                     // Set Text Color
                     if (specialTextUnit.getSpecialTextColor() != 0) {
                         spannableStringBuilder.setSpan(new ForegroundColorSpan(specialTextUnit.getSpecialTextColor()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -337,7 +346,7 @@ public class SimplifySpanBuild {
                     }
                 }
 
-                for (int startPos : specialImageUnit.getStartPoss()) {
+                for (int startPos : startPoss) {
                     spannableStringBuilder.setSpan(new CustomImageSpan(mContext, normalSizeText, finalBitmap, specialImageUnit.getGravity()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             } else if (st instanceof SpecialLabelUnit) {
@@ -345,14 +354,14 @@ public class SimplifySpanBuild {
                 SpecialLabelUnit specialLabelUnit = (SpecialLabelUnit)st;
                 specialLabelUnit.convertLabelTextSize(sp2px(mContext, specialLabelUnit.getLabelTextSize()));
 
-                for (int startPos : specialLabelUnit.getStartPoss()) {
+                for (int startPos : startPoss) {
                     spannableStringBuilder.setSpan(new CustomLabelSpan(normalSizeText, specialLabelUnit), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             } else if (st instanceof SpecialRawSpanUnit) {
                 // raw span
                 SpecialRawSpanUnit specialRawSpanUnit = (SpecialRawSpanUnit)st;
 
-                int startPos = specialRawSpanUnit.getStartPoss()[0];
+                int startPos = startPoss[0];
                 spannableStringBuilder.setSpan(specialRawSpanUnit.getSpanObj(), startPos, startPos + specialTextLength, specialRawSpanUnit.getFlags());
 
                 // Temporarily unable to support all
