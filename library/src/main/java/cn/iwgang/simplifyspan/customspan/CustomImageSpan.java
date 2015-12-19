@@ -1,7 +1,6 @@
 package cn.iwgang.simplifyspan.customspan;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -10,54 +9,93 @@ import android.text.style.ImageSpan;
 
 import java.lang.ref.WeakReference;
 
-import cn.iwgang.simplifyspan.other.SpecialGravityEnum;
+import cn.iwgang.simplifyspan.other.OnClickStateChangeListener;
+import cn.iwgang.simplifyspan.other.SpecialGravity;
+import cn.iwgang.simplifyspan.unit.SpecialImageUnit;
 
 /**
  * Custom ImageSpan
  * Created by iWgang on 15/12/3.
  * https://github.com/iwgang/SimplifySpan
  */
-public class CustomImageSpan extends ImageSpan {
+public class CustomImageSpan extends ImageSpan implements OnClickStateChangeListener {
     private WeakReference<Drawable> mDrawableRef;
-    private SpecialGravityEnum gravity;
+    private int gravity;
     private Rect mRect = new Rect();
     private String mNormalSizeText;
+    private int mBgColor;
+    private boolean isSelected;
+    private boolean isClickable;
+    private int pressBgColor;
 
-    public CustomImageSpan(Context context, String normalSizeText, Bitmap b, SpecialGravityEnum gravity) {
-        super(context, b, ALIGN_BASELINE);
-        this.gravity = gravity;
+    private int mLineTextHeight;
+    private int mLineTextBaselineOffset;
+
+    public CustomImageSpan(Context context, String normalSizeText,  SpecialImageUnit specialImageUnit) {
+        super(context, specialImageUnit.getBitmap(), ALIGN_BASELINE);
+        this.gravity = specialImageUnit.getGravity();
         this.mNormalSizeText = normalSizeText;
+        this.mBgColor = specialImageUnit.getBgColor();
+        this.isClickable = specialImageUnit.isClickable();
+    }
+
+    @Override
+    public void onStateChange(boolean isSelected, int pressBgColor) {
+        this.isSelected = isSelected;
+        this.pressBgColor = pressBgColor;
     }
 
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
         Drawable b = getCachedDrawable();
-
         int drawableHeight = b.getIntrinsicHeight();
-        int fontDescent = paint.getFontMetricsInt().descent;
+        int drawableWidth = b.getIntrinsicWidth();
         paint.getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), mRect);
+
+        float finalUnitHeight = bottom - top;
+        float bgTop = bottom - finalUnitHeight;
+
+        if (isClickable && isSelected && pressBgColor != 0) {
+            // click background
+            paint.setColor(pressBgColor);
+            canvas.drawRect(x, bgTop, x + drawableWidth, bgTop + finalUnitHeight, paint);
+        } else {
+            // normal background
+            if (mBgColor != 0) {
+                paint.setColor(mBgColor);
+                canvas.drawRect(x, bgTop, x + drawableWidth, bgTop + finalUnitHeight, paint);
+            }
+        }
+
         int textHeight = mRect.height();
         if (drawableHeight > textHeight) {
             super.draw(canvas, text, start, end, x, top, y, bottom, paint);
             return;
         }
-
         canvas.save();
 
-        int baseTransY = bottom - b.getBounds().bottom - fontDescent + mRect.bottom;
+        if (mLineTextHeight <= 0) {
+            Rect specialTextRect = new Rect();
+            paint.getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), specialTextRect);
+            mLineTextHeight = specialTextRect.height();
+            mLineTextBaselineOffset = specialTextRect.bottom;
+        }
+
+        float newStartY = y;
         switch (gravity) {
-            case TOP: {
-                int transY = baseTransY - (textHeight - drawableHeight);
-                canvas.translate(x, transY);
+            case SpecialGravity.TOP: {
+                newStartY -= mLineTextHeight - mLineTextBaselineOffset;
+                canvas.translate(x, newStartY);
                 break;
             }
-            case CENTER: {
-                int transY = baseTransY - (textHeight / 2 - drawableHeight / 2);
-                canvas.translate(x, transY);
+            case SpecialGravity.CENTER: {
+                newStartY -= (mLineTextHeight / 2 + drawableHeight / 2 - mLineTextBaselineOffset);
+                canvas.translate(x, newStartY);
                 break;
             }
-            case BOTTOM: {
-                canvas.translate(x, baseTransY);
+            case SpecialGravity.BOTTOM: {
+                newStartY -= drawableHeight - mLineTextBaselineOffset;
+                canvas.translate(x, newStartY);
                 break;
             }
         }

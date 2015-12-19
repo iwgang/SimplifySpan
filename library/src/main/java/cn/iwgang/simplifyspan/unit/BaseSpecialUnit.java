@@ -1,7 +1,7 @@
 package cn.iwgang.simplifyspan.unit;
 
-import cn.iwgang.simplifyspan.other.SpecialConvertModeEnum;
-import cn.iwgang.simplifyspan.other.SpecialGravityEnum;
+import cn.iwgang.simplifyspan.other.SpecialConvertMode;
+import cn.iwgang.simplifyspan.other.SpecialGravity;
 
 /**
  * Base Special Unit
@@ -9,10 +9,10 @@ import cn.iwgang.simplifyspan.other.SpecialGravityEnum;
  * https://github.com/iwgang/SimplifySpan
  */
 public class BaseSpecialUnit {
-    private String specialText;
+    protected String specialText;
     private int[] startPoss;
-    protected SpecialGravityEnum gravity = SpecialGravityEnum.BOTTOM;
-    protected SpecialConvertModeEnum convertMode = SpecialConvertModeEnum.ONLY_FIRST;
+    protected int gravity = SpecialGravity.BOTTOM;
+    protected int convertMode = SpecialConvertMode.ONLY_FIRST;
 
     public BaseSpecialUnit(String specialText) {
         this.specialText = specialText;
@@ -22,11 +22,11 @@ public class BaseSpecialUnit {
         return specialText;
     }
 
-    public SpecialGravityEnum getGravity() {
+    public int getGravity() {
         return gravity;
     }
 
-    public SpecialConvertModeEnum getConvertMode() {
+    public int getConvertMode() {
         return convertMode;
     }
 

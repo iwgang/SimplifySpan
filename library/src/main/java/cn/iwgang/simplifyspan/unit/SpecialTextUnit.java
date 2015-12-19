@@ -1,9 +1,5 @@
 package cn.iwgang.simplifyspan.unit;
 
-import cn.iwgang.simplifyspan.other.OnClickableSpanListener;
-import cn.iwgang.simplifyspan.other.SpecialConvertModeEnum;
-import cn.iwgang.simplifyspan.other.SpecialGravityEnum;
-
 /**
  * Text Special Unit
  * Created by iWgang on 15/12/3.
@@ -16,100 +12,131 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     private boolean isShowUnderline;
     private boolean isShowStrikeThrough;
     private boolean isTextBold;
-    private boolean isShowClickableSpanUnderline;
-    private OnClickableSpanListener mOnClickListener;
-    private int mClickableSpanPreTextColor;
-    private int mClickableSpanPreBgColor;
+    private SpecialClickableUnit specialClickableUnit;
 
+    /**
+     * @param specialText       Special Text
+     */
     public SpecialTextUnit(String specialText) {
         super(specialText);
     }
 
+    /**
+     * @param specialText       Special Text
+     * @param specialTextColor  special Text Color
+     */
     public SpecialTextUnit(String specialText, int specialTextColor) {
         this(specialText);
         this.specialTextColor = specialTextColor;
     }
 
+    /**
+     * @param specialText       Special Text
+     * @param specialTextColor  special Text Color
+     * @param textSize          Special Text Size (sp)
+     */
     public SpecialTextUnit(String specialText, int specialTextColor, float textSize) {
         this(specialText);
         this.specialTextColor = specialTextColor;
         this.textSize = textSize;
     }
 
-    public SpecialTextUnit(String specialText, int specialTextColor, float textSize, SpecialGravityEnum gravity) {
+    /**
+     * @param specialText       Special Text
+     * @param specialTextColor  special Text Color
+     * @param textSize          Special Text Size (sp)
+     * @param gravity           Use SpecialGravity.xx
+     */
+    public SpecialTextUnit(String specialText, int specialTextColor, float textSize, int gravity) {
         this(specialText);
         this.specialTextColor = specialTextColor;
         this.textSize = textSize;
         this.gravity = gravity;
     }
 
+    /**
+     * Show StrikeThrough
+     * @return SpecialTextUnit
+     */
     public SpecialTextUnit showStrikeThrough() {
         isShowStrikeThrough = true;
         return this;
     }
 
+    /**
+     * Show Underline
+     * @return SpecialTextUnit
+     */
     public SpecialTextUnit showUnderline() {
         isShowUnderline = true;
         return this;
     }
 
+    /**
+     * Use Text Bold
+     * @return SpecialTextUnit
+     */
     public SpecialTextUnit useTextBold() {
         isTextBold = true;
         return this;
     }
 
+    /**
+     * Set Background Color
+     * @param specialTextBackgroundColor color
+     * @return SpecialTextUnit
+     */
     public SpecialTextUnit setSpecialTextBackgroundColor(int specialTextBackgroundColor) {
         this.specialTextBackgroundColor = specialTextBackgroundColor;
         return this;
     }
 
+    /**
+     * Set Special Text Color
+     * @param specialTextColor color
+     * @return SpecialTextUnit
+     */
     public SpecialTextUnit setSpecialTextColor(int specialTextColor) {
         this.specialTextColor = specialTextColor;
         return this;
     }
 
+    /**
+     * Set Special Text Size
+     * @param textSize size (sp)
+     * @return SpecialTextUnit
+     */
     public SpecialTextUnit setTextSize(float textSize) {
         this.textSize = textSize;
         return this;
     }
 
-    public SpecialTextUnit setOnClickListener(boolean isShowClickableSpanUnderline, OnClickableSpanListener onClickListener) {
-        return setOnClickListener(isShowClickableSpanUnderline, 0, onClickListener);
-    }
-
     /**
-     * Set OnClickListener
-     * @param isShowClickableSpanUnderline is show Underline
-     * @param clickableSpanPreBgColor      press background color
-     * @param onClickListener OnClickableSpanListener
+     * Set SpecialClickableUnit
+     * @param specialClickableUnit SpecialClickableUnit
      * @return SpecialTextUnit
      */
-    public SpecialTextUnit setOnClickListener(boolean isShowClickableSpanUnderline, int clickableSpanPreBgColor, OnClickableSpanListener onClickListener) {
-        return setOnClickListener(isShowClickableSpanUnderline, clickableSpanPreBgColor, 0, onClickListener);
-    }
-
-    /**
-     * Set OnClickListener
-     * @param isShowClickableSpanUnderline is show Underline
-     * @param clickableSpanPreBgColor      press background color (unRequired set 0)
-     * @param mClickableSpanPreTextColor   press text color (unRequired set 0)
-     * @param onClickListener OnClickableSpanListener
-     * @return SpecialTextUnit
-     */
-    public SpecialTextUnit setOnClickListener(boolean isShowClickableSpanUnderline, int clickableSpanPreBgColor, int mClickableSpanPreTextColor, OnClickableSpanListener onClickListener) {
-        this.isShowClickableSpanUnderline = isShowClickableSpanUnderline;
-        this.mOnClickListener = onClickListener;
-        this.mClickableSpanPreBgColor = clickableSpanPreBgColor;
-        this.mClickableSpanPreTextColor = mClickableSpanPreTextColor;
+    public SpecialTextUnit setSpecialClickableUnit(SpecialClickableUnit specialClickableUnit) {
+        this.specialClickableUnit = specialClickableUnit;
         return this;
     }
 
-    public SpecialTextUnit setGravity(SpecialGravityEnum gravity) {
+    /**
+     * Set Gravity
+     * @param gravity use SpecialGravity.xx
+     * @return SpecialTextUnit
+     */
+    public SpecialTextUnit setGravity(int gravity) {
         this.gravity = gravity;
         return this;
     }
 
-    public SpecialTextUnit setConvertMode(SpecialConvertModeEnum convertMode) {
+    /**
+     * Set Convert Mode
+     * @param convertMode use SpecialConvertMode.xx
+     * @return SpecialTextUnit
+     */
+    public SpecialTextUnit setConvertMode(int convertMode) {
         this.convertMode = convertMode;
         return this;
     }
@@ -138,20 +165,8 @@ public class SpecialTextUnit extends BaseSpecialUnit {
         return isTextBold;
     }
 
-    public int getClickableSpanPreBgColor() {
-        return mClickableSpanPreBgColor;
-    }
-
-    public int getClickableSpanPreTextColor() {
-        return mClickableSpanPreTextColor;
-    }
-
-    public OnClickableSpanListener getOnClickListener() {
-        return mOnClickListener;
-    }
-
-    public boolean isShowClickableSpanUnderline() {
-        return isShowClickableSpanUnderline;
+    public SpecialClickableUnit getSpecialClickableUnit() {
+        return specialClickableUnit;
     }
 
 }

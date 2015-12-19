@@ -8,6 +8,8 @@ import android.graphics.RectF;
 import android.media.ThumbnailUtils;
 import android.text.style.ReplacementSpan;
 
+import cn.iwgang.simplifyspan.other.OnClickStateChangeListener;
+import cn.iwgang.simplifyspan.other.SpecialGravity;
 import cn.iwgang.simplifyspan.unit.SpecialLabelUnit;
 
 /**
@@ -15,14 +17,14 @@ import cn.iwgang.simplifyspan.unit.SpecialLabelUnit;
  * Created by iWgang on 15/12/3.
  * https://github.com/iwgang/SimplifySpan
  */
-public class CustomLabelSpan extends ReplacementSpan {
+public class CustomLabelSpan extends ReplacementSpan implements OnClickStateChangeListener {
     private SpecialLabelUnit mSpecialLabelUnit;
     private String mSpecialText;
     private float mFinalWidth, mFinalHeight;
     private int mSpecialTextHeight = 0;
     private float mSpecialTextWidth = 0;
     private int mLineTextHeight = 0;
-    private int mLinetextBaselineOffset = 0;
+    private int mLineTextBaselineOffset = 0;
     private int mSpecialTextBaselineOffset = 0;
     private float mLabelBgRadius;
     private Bitmap mBitmap;
@@ -37,10 +39,17 @@ public class CustomLabelSpan extends ReplacementSpan {
     private RectF bgRect;
     private boolean isInit = true;
 
+    private int mBgColor;
+    private boolean isSelected;
+    private boolean isClickable;
+    private int pressBgColor;
+
     public CustomLabelSpan(String normalSizeText, SpecialLabelUnit specialLabelUnit) {
         this.mSpecialLabelUnit = specialLabelUnit;
         mSpecialText = mSpecialLabelUnit.getSpecialText();
         this.mNormalSizeText = normalSizeText;
+        this.isClickable = mSpecialLabelUnit.isClickable();
+        this.mBgColor = mSpecialLabelUnit.getBgColor();
 
         mBitmap = mSpecialLabelUnit.getBitmap();
         if (null == mBitmap) {
@@ -80,6 +89,12 @@ public class CustomLabelSpan extends ReplacementSpan {
     }
 
     @Override
+    public void onStateChange(boolean isSelected, int pressBgColor) {
+        this.isSelected = isSelected;
+        this.pressBgColor = pressBgColor;
+    }
+
+    @Override
     public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
         if (isInit) {
             isInit = false;
@@ -101,6 +116,20 @@ public class CustomLabelSpan extends ReplacementSpan {
 
     @Override
     public void draw(Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
+        float finalUnitHeight = bottom - top;
+        float bgTop = bottom - finalUnitHeight;
+        if (isClickable && isSelected && pressBgColor != 0) {
+            // click background
+            paint.setColor(pressBgColor);
+            canvas.drawRect(x, bgTop, x + mFinalWidth, bgTop + finalUnitHeight, paint);
+        } else {
+            // normal background
+            if (mBgColor != 0) {
+                paint.setColor(mBgColor);
+                canvas.drawRect(x, bgTop, x + mFinalWidth, bgTop + finalUnitHeight, paint);
+            }
+        }
+
         float labelTextSize = mSpecialLabelUnit.getLabelTextSize();
         if (labelTextSize > 0 && labelTextSize != paint.getTextSize()) {
             paint.setTextSize(labelTextSize);
@@ -110,17 +139,17 @@ public class CustomLabelSpan extends ReplacementSpan {
         int newTextY = y;
 
         switch (mSpecialLabelUnit.getGravity()) {
-            case TOP:
-                newStartY -= (mLineTextHeight - mLinetextBaselineOffset);
-                newTextY -= (mLineTextHeight - mSpecialTextHeight - (mLinetextBaselineOffset - mSpecialTextBaselineOffset) - mPaddingTop);
+            case SpecialGravity.TOP:
+                newStartY -= (mLineTextHeight - mLineTextBaselineOffset);
+                newTextY -= (mLineTextHeight - mSpecialTextHeight - (mLineTextBaselineOffset - mSpecialTextBaselineOffset) - mPaddingTop);
                 break;
-            case CENTER:
-                newStartY -= (mLineTextHeight / 2 + mFinalHeight / 2 - mLinetextBaselineOffset);
-                newTextY -= (mLineTextHeight / 2 - mSpecialTextHeight / 2 - (mLinetextBaselineOffset - mSpecialTextBaselineOffset));
+            case SpecialGravity.CENTER:
+                newStartY -= (mLineTextHeight / 2 + mFinalHeight / 2 - mLineTextBaselineOffset);
+                newTextY -= (mLineTextHeight / 2 - mSpecialTextHeight / 2 - (mLineTextBaselineOffset - mSpecialTextBaselineOffset));
                 break;
-            case BOTTOM:
-                newStartY -= mFinalHeight - mLinetextBaselineOffset;
-                newTextY -= mPaddingBottom - (mLinetextBaselineOffset - mSpecialTextBaselineOffset);
+            case SpecialGravity.BOTTOM:
+                newStartY -= mFinalHeight - mLineTextBaselineOffset;
+                newTextY -= mPaddingBottom - (mLineTextBaselineOffset - mSpecialTextBaselineOffset);
                 break;
         }
 
@@ -204,7 +233,7 @@ public class CustomLabelSpan extends ReplacementSpan {
             Rect specialTextRect = new Rect();
             paint.getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), specialTextRect);
             mLineTextHeight = specialTextRect.height();
-            mLinetextBaselineOffset = specialTextRect.bottom;
+            mLineTextBaselineOffset = specialTextRect.bottom;
 
             float labelTextSize = mSpecialLabelUnit.getLabelTextSize();
             if (labelTextSize > 0 && labelTextSize != paint.getTextSize()) {

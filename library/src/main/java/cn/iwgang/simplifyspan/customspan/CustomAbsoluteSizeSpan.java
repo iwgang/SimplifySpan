@@ -5,7 +5,7 @@ import android.text.TextPaint;
 import android.text.style.AbsoluteSizeSpan;
 import android.widget.TextView;
 
-import cn.iwgang.simplifyspan.other.SpecialGravityEnum;
+import cn.iwgang.simplifyspan.other.SpecialGravity;
 
 /**
  * Custom ImageSpan
@@ -14,14 +14,14 @@ import cn.iwgang.simplifyspan.other.SpecialGravityEnum;
  */
 public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
     private TextView textView;
-    private SpecialGravityEnum gravity;
+    private int gravity;
     private int offsetBaselineShift;
     private String mSpecialText;
     private Rect mTextViewRect = new Rect();
     private Rect mSpecialTextRect = new Rect();
     private String mNormalSizeText;
 
-    public CustomAbsoluteSizeSpan(String normalSizeText, String specialText, int size, TextView textView, SpecialGravityEnum gravity) {
+    public CustomAbsoluteSizeSpan(String normalSizeText, String specialText, int size, TextView textView, int gravity) {
         super(size, true);
         this.mSpecialText = specialText;
         this.textView = textView;
@@ -33,7 +33,7 @@ public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
 
-        if (gravity == SpecialGravityEnum.BOTTOM) return;
+        if (gravity == SpecialGravity.BOTTOM) return;
 
         textView.getPaint().getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), mTextViewRect);
         ds.getTextBounds(mSpecialText, 0, mSpecialText.length(), mSpecialTextRect);
@@ -41,10 +41,10 @@ public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
 
         int offset = mTextViewRect.bottom - mSpecialTextRect.bottom;
         switch (gravity) {
-            case TOP:
+            case SpecialGravity.TOP:
                 offsetBaselineShift = mMainTextHeight - mSpecialTextRect.height() - offset;
                 break;
-            case CENTER:
+            case SpecialGravity.CENTER:
                 offsetBaselineShift = mMainTextHeight / 2 - mSpecialTextRect.height() / 2 - offset;
                 break;
         }

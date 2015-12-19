@@ -2,9 +2,6 @@ package cn.iwgang.simplifyspan.unit;
 
 import android.graphics.Bitmap;
 
-import cn.iwgang.simplifyspan.other.SpecialConvertModeEnum;
-import cn.iwgang.simplifyspan.other.SpecialGravityEnum;
-
 /**
  * Label Special Unit
  * Created by iWgang on 15/12/7.
@@ -25,6 +22,8 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
     private int labelBgBorderColor;
     private boolean isShowBorder;
     private boolean isTextBold;
+    private boolean isClickable;
+    private int bgColor;
 
     public SpecialLabelUnit(String specialText, int labelTextColor, float labelTextSize, int labelBgColor) {
         super(specialText);
@@ -88,7 +87,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
         return this;
     }
 
-    public SpecialLabelUnit showShowBorder(int labelBgBorderColor, float borderSize) {
+    public SpecialLabelUnit showBorder(int labelBgBorderColor, float borderSize) {
         isShowBorder = true;
         this.labelBgBorderColor = labelBgBorderColor;
         this.borderSize = borderSize;
@@ -100,12 +99,27 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
         return this;
     }
 
-    public SpecialLabelUnit setGravity(SpecialGravityEnum gravity) {
+    public SpecialLabelUnit setBgColor(int bgColor) {
+        this.bgColor = bgColor;
+        return this;
+    }
+
+    /**
+     * Set Gravity
+     * @param gravity use SpecialGravity.xx
+     * @return
+     */
+    public SpecialLabelUnit setGravity(int gravity) {
         this.gravity = gravity;
         return this;
     }
 
-    public SpecialLabelUnit setConvertMode(SpecialConvertModeEnum convertMode) {
+    /**
+     * Set Convert Mode
+     * @param convertMode use SpecialConvertMode.xx
+     * @return
+     */
+    public SpecialLabelUnit setConvertMode(int convertMode) {
         this.convertMode = convertMode;
         return this;
     }
@@ -154,6 +168,14 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
         return isShowBorder;
     }
 
+    /**
+     * Use only in SimplifySpanBuild
+     * @param clickable
+     */
+    public void setClickable(boolean clickable) {
+        isClickable = clickable;
+    }
+
     public float getBorderSize() {
         return borderSize;
     }
@@ -168,6 +190,14 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
 
     public Bitmap getBitmap() {
         return mBitmap;
+    }
+
+    public boolean isClickable() {
+        return isClickable;
+    }
+
+    public int getBgColor() {
+        return bgColor;
     }
 
     /**

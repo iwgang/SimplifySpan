@@ -25,8 +25,10 @@ import cn.iwgang.simplifyspan.customspan.CustomClickableSpan;
 import cn.iwgang.simplifyspan.customspan.CustomImageSpan;
 import cn.iwgang.simplifyspan.customspan.CustomLabelSpan;
 import cn.iwgang.simplifyspan.other.CustomLinkMovementMethod;
-import cn.iwgang.simplifyspan.other.OnClickableSpanListener;
+import cn.iwgang.simplifyspan.other.OnClickStateChangeListener;
+import cn.iwgang.simplifyspan.other.SpecialConvertMode;
 import cn.iwgang.simplifyspan.unit.BaseSpecialUnit;
+import cn.iwgang.simplifyspan.unit.SpecialClickableUnit;
 import cn.iwgang.simplifyspan.unit.SpecialImageUnit;
 import cn.iwgang.simplifyspan.unit.SpecialLabelUnit;
 import cn.iwgang.simplifyspan.unit.SpecialRawSpanUnit;
@@ -44,6 +46,8 @@ public class SimplifySpanBuild {
     private StringBuilder mBeforeStringBuilder;
     private Context mContext;
     private TextView mTextView;
+    private Map<SpecialClickableUnit, PositionInfo> mBeforeCacheSpecialClickableUnitMap = new HashMap<>();
+    private Map<SpecialClickableUnit, PositionInfo> mCacheSpecialClickableUnitMap = new HashMap<>();
 
     private StringBuilder mNormalSizeText;
 
@@ -87,13 +91,13 @@ public class SimplifySpanBuild {
 
             int specialTextLength = specialText.length();
             switch (st.getConvertMode()) {
-                case ONLY_FIRST:
+                case SpecialConvertMode.ONLY_FIRST:
                     st.setStartPoss(new int[]{initStartPos + finalText.indexOf(specialText)});
                     break;
-                case ONLY_LAST:
+                case SpecialConvertMode.ONLY_LAST:
                     st.setStartPoss(new int[]{initStartPos + finalText.lastIndexOf(specialText)});
                     break;
-                case ALL:
+                case SpecialConvertMode.ALL:
                     int firstSpecialTextStartPos = finalText.indexOf(specialText);
                     otherSpecialTextStartPos = new ArrayList<>();
                     otherSpecialTextStartPos.add(firstSpecialTextStartPos);
@@ -238,6 +242,28 @@ public class SimplifySpanBuild {
     }
 
     /**
+     * append multi clickable SpecialUnit or String
+     * @param specialClickableUnit SpecialClickableUnit
+     * @param specialUnitOrStrings Unit Or String
+     * @return
+     */
+    public SimplifySpanBuild appendMultiClickableSpecialUnit(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
+        processMultiClickableSpecialUnit(false, specialClickableUnit, specialUnitOrStrings);
+        return this;
+    }
+
+    /**
+     * append multi clickable SpecialUnit or String to first (Behind the existing BeforeContent)
+     * @param specialClickableUnit SpecialClickableUnit
+     * @param specialUnitOrStrings Unit Or String
+     * @return
+     */
+    public SimplifySpanBuild appendMultiClickableSpecialUnitToFirst(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
+        processMultiClickableSpecialUnit(true, specialClickableUnit, specialUnitOrStrings);
+        return this;
+    }
+
+    /**
      * Build
      * @return SpannableStringBuilder
      */
@@ -258,6 +284,17 @@ public class SimplifySpanBuild {
                     }
                 }
             }
+
+            // reset Cache SpecialClickableUnit start pos
+            if (!mCacheSpecialClickableUnitMap.isEmpty()) {
+                for (Map.Entry<SpecialClickableUnit, PositionInfo> cm : mCacheSpecialClickableUnitMap.entrySet()) {
+                    cm.getValue().startPos += mBeforeStringBuilder.length();
+                }
+            }
+        }
+
+        if (!mBeforeCacheSpecialClickableUnitMap.isEmpty()) {
+            mCacheSpecialClickableUnitMap.putAll(mBeforeCacheSpecialClickableUnitMap);
         }
 
         if (!mBeforeSpecialUnit.isEmpty()) {
@@ -279,13 +316,19 @@ public class SimplifySpanBuild {
             if (TextUtils.isEmpty(specialText) || null == startPoss || startPoss.length == 0) continue;
 
             int specialTextLength = specialText.length();
-
             if (st instanceof SpecialTextUnit) {
                 // text span
                 SpecialTextUnit specialTextUnit = (SpecialTextUnit)st;
 
-                final OnClickableSpanListener onClickListener = specialTextUnit.getOnClickListener();
-
+                final SpecialClickableUnit internalSpecialClickableUnit = specialTextUnit.getSpecialClickableUnit();
+                if (null != internalSpecialClickableUnit) {
+                    if (internalSpecialClickableUnit.getNormalTextColor() == 0) {
+                        internalSpecialClickableUnit.setNormalTextColor(specialTextUnit.getSpecialTextColor());
+                    }
+                    if (internalSpecialClickableUnit.getNormalBgColor() == 0) {
+                        internalSpecialClickableUnit.setNormalBgColor(specialTextUnit.getSpecialTextBackgroundColor());
+                    }
+                }
                 for (int startPos : startPoss) {
                     // Set Text Color
                     if (specialTextUnit.getSpecialTextColor() != 0) {
@@ -293,7 +336,7 @@ public class SimplifySpanBuild {
                     }
 
                     // Set Text Background Color
-                    if (specialTextUnit.getSpecialTextBackgroundColor() != 0 && null == onClickListener) {
+                    if (specialTextUnit.getSpecialTextBackgroundColor() != 0 && null == internalSpecialClickableUnit) {
                         spannableStringBuilder.setSpan(new BackgroundColorSpan(specialTextUnit.getSpecialTextBackgroundColor()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
 
@@ -318,19 +361,18 @@ public class SimplifySpanBuild {
                     }
 
                     // set clickable
-                    if (null != onClickListener) {
+                    if (null != internalSpecialClickableUnit) {
                         if (!isInitClickListener) {
                             isInitClickListener = true;
                             mTextView.setMovementMethod(CustomLinkMovementMethod.getInstance());
                         }
-                        spannableStringBuilder.setSpan(new CustomClickableSpan(specialTextUnit), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        spannableStringBuilder.setSpan(new CustomClickableSpan(internalSpecialClickableUnit), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
             } else if (st instanceof SpecialImageUnit) {
                 // image Span
                 SpecialImageUnit specialImageUnit = (SpecialImageUnit)st;
                 Bitmap bitmap = specialImageUnit.getBitmap();
-                Bitmap finalBitmap = bitmap;
                 int imgWidth = specialImageUnit.getWidth();
                 int imgHeight = specialImageUnit.getHeight();
                 if (imgWidth > 0 && imgHeight > 0) {
@@ -338,16 +380,21 @@ public class SimplifySpanBuild {
                     int bitHeight = bitmap.getHeight();
 
                     if (imgWidth < bitWidth && imgHeight < bitHeight) {
-                        Bitmap tempBitmap = ThumbnailUtils.extractThumbnail(bitmap, imgWidth, imgHeight);
-                        if (null != tempBitmap) {
+                        Bitmap newBitmap = ThumbnailUtils.extractThumbnail(bitmap, imgWidth, imgHeight);
+                        if (null != newBitmap) {
                             bitmap.recycle();
-                            finalBitmap = tempBitmap;
+                            specialImageUnit.setBitmap(newBitmap);
                         }
                     }
                 }
 
                 for (int startPos : startPoss) {
-                    spannableStringBuilder.setSpan(new CustomImageSpan(mContext, normalSizeText, finalBitmap, specialImageUnit.getGravity()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    CustomImageSpan curCustomImageSpan = new CustomImageSpan(mContext, normalSizeText, specialImageUnit);
+                    spannableStringBuilder.setSpan(curCustomImageSpan, startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    if (specialImageUnit.isClickable()) {
+                        addClickStateChangeListeners(startPos, startPos + specialTextLength, curCustomImageSpan);
+                    }
                 }
             } else if (st instanceof SpecialLabelUnit) {
                 // label span
@@ -355,9 +402,25 @@ public class SimplifySpanBuild {
                 specialLabelUnit.convertLabelTextSize(sp2px(mContext, specialLabelUnit.getLabelTextSize()));
 
                 for (int startPos : startPoss) {
-                    spannableStringBuilder.setSpan(new CustomLabelSpan(normalSizeText, specialLabelUnit), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    CustomLabelSpan curCustomLabelSpan = new CustomLabelSpan(normalSizeText, specialLabelUnit);
+                    spannableStringBuilder.setSpan(curCustomLabelSpan, startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    if (specialLabelUnit.isClickable()) {
+                        addClickStateChangeListeners(startPos, startPos + specialTextLength, curCustomLabelSpan);
+                    }
                 }
-            } else if (st instanceof SpecialRawSpanUnit) {
+            } else if (st instanceof SpecialClickableUnit) {
+                // clickable span
+                SpecialClickableUnit specialClickableUnit = (SpecialClickableUnit)st;
+
+                if (!isInitClickListener) {
+                    isInitClickListener = true;
+                    mTextView.setMovementMethod(CustomLinkMovementMethod.getInstance());
+                }
+
+                int startPos = startPoss[0];
+                spannableStringBuilder.setSpan(new CustomClickableSpan(specialClickableUnit), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }  else if (st instanceof SpecialRawSpanUnit) {
                 // raw span
                 SpecialRawSpanUnit specialRawSpanUnit = (SpecialRawSpanUnit)st;
 
@@ -371,9 +434,124 @@ public class SimplifySpanBuild {
         return spannableStringBuilder;
     }
 
+    private void processMultiClickableSpecialUnit(boolean isToFirst, SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
+        if (null == specialClickableUnit || null == specialUnitOrStrings || specialUnitOrStrings.length == 0) return ;
+
+        StringBuilder tempStrBuild = new StringBuilder();
+        int baseStartPos;
+        if (isToFirst) {
+            baseStartPos = mBeforeStringBuilder.length();
+        } else {
+            baseStartPos = mStringBuilder.length();
+        }
+        for (Object su : specialUnitOrStrings) {
+            if (su instanceof SpecialTextUnit) {
+                SpecialTextUnit specialTextUnit = (SpecialTextUnit)su;
+
+                String specialText = specialTextUnit.getSpecialText();
+                if (TextUtils.isEmpty(specialText)) continue ;
+
+                specialTextUnit.setSpecialClickableUnit(null);
+
+                // process start pos
+                specialTextUnit.setStartPoss(new int[]{baseStartPos + tempStrBuild.length()});
+                if (isToFirst) {
+                    mBeforeSpecialUnit.add(specialTextUnit);
+                } else {
+                    mFinalSpecialUnit.add(specialTextUnit);
+                }
+                tempStrBuild.append(specialText);
+            } else if (su instanceof SpecialImageUnit) {
+                SpecialImageUnit specialImageUnit = (SpecialImageUnit)su;
+
+                String specialText = specialImageUnit.getSpecialText();
+                if (TextUtils.isEmpty(specialText)) continue ;
+
+                specialImageUnit.setClickable(true);
+                if (specialImageUnit.getBgColor() == 0 && specialClickableUnit.getNormalBgColor() != 0) {
+                    specialImageUnit.setBgColor(specialClickableUnit.getNormalBgColor());
+                }
+
+                // process start pos
+                specialImageUnit.setStartPoss(new int[]{baseStartPos + tempStrBuild.length()});
+                if (isToFirst) {
+                    mBeforeSpecialUnit.add(specialImageUnit);
+                } else {
+                    mFinalSpecialUnit.add(specialImageUnit);
+                }
+                tempStrBuild.append(specialText);
+            } else if (su instanceof SpecialLabelUnit) {
+                SpecialLabelUnit specialLabelUnit = (SpecialLabelUnit)su;
+
+                String specialText = specialLabelUnit.getSpecialText();
+                if (TextUtils.isEmpty(specialText)) continue ;
+
+                specialLabelUnit.setClickable(true);
+                if (specialLabelUnit.getBgColor() == 0 && specialClickableUnit.getNormalBgColor() != 0) {
+                    specialLabelUnit.setBgColor(specialClickableUnit.getNormalBgColor());
+                }
+
+                // process start pos
+                specialLabelUnit.setStartPoss(new int[]{baseStartPos + tempStrBuild.length()});
+                if (isToFirst) {
+                    mBeforeSpecialUnit.add(specialLabelUnit);
+                } else {
+                    mFinalSpecialUnit.add(specialLabelUnit);
+                }
+                tempStrBuild.append(specialText);
+            } else if (su instanceof String) {
+                tempStrBuild.append(su.toString());
+            }
+        }
+
+        String finalStr = tempStrBuild.toString();
+        specialClickableUnit.setSpecialText(finalStr);
+        specialClickableUnit.setStartPoss(new int[]{baseStartPos});
+        PositionInfo positionInfo = new PositionInfo(baseStartPos, finalStr.length());
+        if (isToFirst) {
+            mBeforeStringBuilder.insert(baseStartPos, finalStr);
+            mBeforeSpecialUnit.add(specialClickableUnit);
+            mBeforeCacheSpecialClickableUnitMap.put(specialClickableUnit, positionInfo);
+        } else {
+            mStringBuilder.append(finalStr);
+            mFinalSpecialUnit.add(specialClickableUnit);
+            mCacheSpecialClickableUnitMap.put(specialClickableUnit, positionInfo);
+        }
+    }
+
+    private void addClickStateChangeListeners(int startPos, int endPos, OnClickStateChangeListener onClickStateChangeListener) {
+        if (mCacheSpecialClickableUnitMap.isEmpty()) return ;
+
+        for (Map.Entry<SpecialClickableUnit, PositionInfo> cm : mCacheSpecialClickableUnitMap.entrySet()) {
+            PositionInfo curPositionInfo = cm.getValue();
+            int curStartPos = curPositionInfo.startPos;
+            int curEndPos = curStartPos + curPositionInfo.textLength;
+            if (startPos >= curStartPos && endPos <= curEndPos) {
+                SpecialClickableUnit curCacheSpecialClickableUnit = cm.getKey();
+                List<OnClickStateChangeListener> onClickStateChangeListeners = curCacheSpecialClickableUnit.getOnClickStateChangeListeners();
+                if (null == onClickStateChangeListeners) {
+                    onClickStateChangeListeners = new ArrayList<>();
+                    curCacheSpecialClickableUnit.setOnClickStateChangeListeners(onClickStateChangeListeners);
+                }
+                onClickStateChangeListeners.add(onClickStateChangeListener);
+                break ;
+            }
+        }
+    }
+
     public static float sp2px(Context context, float spValue) {
         final float scale = context.getResources().getDisplayMetrics().scaledDensity;
         return spValue * scale;
+    }
+
+    static class PositionInfo {
+        int startPos;
+        int textLength;
+
+        public PositionInfo(int startPos, int textLength) {
+            this.startPos = startPos;
+            this.textLength = textLength;
+        }
     }
 
 }

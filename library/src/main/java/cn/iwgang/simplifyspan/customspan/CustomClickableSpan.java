@@ -7,8 +7,11 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.List;
+
+import cn.iwgang.simplifyspan.other.OnClickStateChangeListener;
 import cn.iwgang.simplifyspan.other.OnClickableSpanListener;
-import cn.iwgang.simplifyspan.unit.SpecialTextUnit;
+import cn.iwgang.simplifyspan.unit.SpecialClickableUnit;
 
 /**
  * Custom ClickableSpan
@@ -16,35 +19,42 @@ import cn.iwgang.simplifyspan.unit.SpecialTextUnit;
  * https://github.com/iwgang/SimplifySpan
  */
 public class CustomClickableSpan extends ClickableSpan {
-    private SpecialTextUnit mSpecialTextUnit;
+    private List<OnClickStateChangeListener> mOnClickStateChangeListeners;
+    private OnClickableSpanListener mOnClickableSpanListener;
     private boolean isPressed;
-    private int mtSpecialTextColorNor;
-    private int mtSpecialTextColorPre;
-    private int mClickableSpanBgColorNor;
-    private int mClickableSpanBgColorPre;
+    private boolean isShowUnderline;
+    private int mTextColorNor;
+    private int mTextColorPre;
+    private int mBgColorNor;
+    private int mBgColorPre;
 
-    public CustomClickableSpan(SpecialTextUnit specialTextUnit) {
-        this.mSpecialTextUnit = specialTextUnit;
-        mtSpecialTextColorNor = mSpecialTextUnit.getSpecialTextColor();
-        mtSpecialTextColorPre = mSpecialTextUnit.getClickableSpanPreTextColor();
-        mClickableSpanBgColorNor = mSpecialTextUnit.getSpecialTextBackgroundColor();
-        mClickableSpanBgColorPre = mSpecialTextUnit.getClickableSpanPreBgColor();
+    public CustomClickableSpan(SpecialClickableUnit specialClickableUnit) {
+        mTextColorNor = specialClickableUnit.getNormalTextColor();
+        mTextColorPre = specialClickableUnit.getPressTextColor();
+        mBgColorNor = specialClickableUnit.getNormalBgColor();
+        mBgColorPre = specialClickableUnit.getPressBgColor();
+        isShowUnderline = specialClickableUnit.isShowUnderline();
+        mOnClickableSpanListener = specialClickableUnit.getOnClickListener();
+        this.mOnClickStateChangeListeners = specialClickableUnit.getOnClickStateChangeListeners();
     }
 
     @Override
     public void onClick(View widget) {
-        OnClickableSpanListener onClickableSpanListener = mSpecialTextUnit.getOnClickListener();
-
-        if (null != onClickableSpanListener) {
+        if (null != mOnClickableSpanListener) {
             TextView tv = (TextView)widget;
             Spanned spanned = (Spanned)tv.getText();
             int start = spanned.getSpanStart(this);
             int end = spanned.getSpanEnd(this);
-            onClickableSpanListener.onClick(tv, spanned.subSequence(start, end).toString());
+            mOnClickableSpanListener.onClick(tv, spanned.subSequence(start, end).toString());
         }
     }
 
     public void setPressed(boolean isSelected) {
+        if (null != mOnClickStateChangeListeners && !mOnClickStateChangeListeners.isEmpty()) {
+            for (OnClickStateChangeListener csl : mOnClickStateChangeListeners) {
+                csl.onStateChange(isSelected, mBgColorPre);
+            }
+        }
         isPressed = isSelected;
     }
 
@@ -53,22 +63,22 @@ public class CustomClickableSpan extends ClickableSpan {
         super.updateDrawState(ds);
 
         // set text color And press status color
-        if (mtSpecialTextColorNor != 0) {
-            if (mtSpecialTextColorPre != 0) {
-                ds.setColor(isPressed ? mtSpecialTextColorPre : mtSpecialTextColorNor);
+        if (mTextColorNor != 0) {
+            if (mTextColorPre != 0) {
+                ds.setColor(isPressed ? mTextColorPre : mTextColorNor);
             } else {
-                ds.setColor(mtSpecialTextColorNor);
+                ds.setColor(mTextColorNor);
             }
         }
 
         // set background color And press status color
-        if (mClickableSpanBgColorPre != 0) {
-            ds.bgColor = isPressed ? mClickableSpanBgColorPre : mClickableSpanBgColorNor == 0 ? Color.TRANSPARENT : mClickableSpanBgColorNor;
-        } else if (mClickableSpanBgColorNor != 0) {
-            ds.bgColor = mClickableSpanBgColorNor;
+        if (mBgColorPre != 0) {
+            ds.bgColor = isPressed ? mBgColorPre : mBgColorNor == 0 ? Color.TRANSPARENT : mBgColorNor;
+        } else if (mBgColorNor != 0) {
+            ds.bgColor = mBgColorNor;
         }
 
-        if (!mSpecialTextUnit.isShowClickableSpanUnderline()) {
+        if (!isShowUnderline) {
             // clear underline
             ds.setUnderlineText(false);
         }
