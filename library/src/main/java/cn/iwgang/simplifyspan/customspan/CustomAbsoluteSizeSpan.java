@@ -8,14 +8,14 @@ import android.widget.TextView;
 import cn.iwgang.simplifyspan.other.SpecialGravity;
 
 /**
- * Custom ImageSpan
+ * Custom AbsoluteSizeSpan
  * Created by iWgang on 15/12/5.
  * https://github.com/iwgang/SimplifySpan
  */
 public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
-    private TextView textView;
-    private int gravity;
-    private int offsetBaselineShift;
+    private TextView mTextView;
+    private int mGravity;
+    private int mOffsetBaselineShift;
     private String mSpecialText;
     private Rect mTextViewRect = new Rect();
     private Rect mSpecialTextRect = new Rect();
@@ -23,38 +23,38 @@ public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
 
     public CustomAbsoluteSizeSpan(String normalSizeText, String specialText, int size, TextView textView, int gravity) {
         super(size, true);
-        this.mSpecialText = specialText;
-        this.textView = textView;
-        this.gravity = gravity;
-        this.mNormalSizeText = normalSizeText;
+        mSpecialText = specialText;
+        mTextView = textView;
+        mGravity = gravity;
+        mNormalSizeText = normalSizeText;
     }
 
     @Override
     public void updateDrawState(TextPaint ds) {
         super.updateDrawState(ds);
 
-        if (gravity == SpecialGravity.BOTTOM) return;
+        if (mGravity == SpecialGravity.BOTTOM) return;
 
-        textView.getPaint().getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), mTextViewRect);
+        mTextView.getPaint().getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), mTextViewRect);
         ds.getTextBounds(mSpecialText, 0, mSpecialText.length(), mSpecialTextRect);
         int mMainTextHeight = mTextViewRect.height();
 
         int offset = mTextViewRect.bottom - mSpecialTextRect.bottom;
-        switch (gravity) {
+        switch (mGravity) {
             case SpecialGravity.TOP:
-                offsetBaselineShift = mMainTextHeight - mSpecialTextRect.height() - offset;
+                mOffsetBaselineShift = mMainTextHeight - mSpecialTextRect.height() - offset;
                 break;
             case SpecialGravity.CENTER:
-                offsetBaselineShift = mMainTextHeight / 2 - mSpecialTextRect.height() / 2 - offset;
+                mOffsetBaselineShift = mMainTextHeight / 2 - mSpecialTextRect.height() / 2 - offset;
                 break;
         }
 
-        ds.baselineShift -= offsetBaselineShift;
+        ds.baselineShift -= mOffsetBaselineShift;
     }
 
     @Override
     public void updateMeasureState(TextPaint ds) {
         super.updateMeasureState(ds);
-        ds.baselineShift -= offsetBaselineShift;
+        ds.baselineShift -= mOffsetBaselineShift;
     }
 }

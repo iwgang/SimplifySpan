@@ -1,6 +1,5 @@
 package cn.iwgang.simplifyspan.customspan;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -31,8 +30,8 @@ public class CustomImageSpan extends ImageSpan implements OnClickStateChangeList
     private int mLineTextHeight;
     private int mLineTextBaselineOffset;
 
-    public CustomImageSpan(Context context, String normalSizeText,  SpecialImageUnit specialImageUnit) {
-        super(context, specialImageUnit.getBitmap(), ALIGN_BASELINE);
+    public CustomImageSpan(String normalSizeText,  SpecialImageUnit specialImageUnit) {
+        super(specialImageUnit.getContext(), specialImageUnit.getBitmap(), ALIGN_BASELINE);
         this.gravity = specialImageUnit.getGravity();
         this.mNormalSizeText = normalSizeText;
         this.mBgColor = specialImageUnit.getBgColor();

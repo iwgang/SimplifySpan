@@ -1,5 +1,6 @@
 package cn.iwgang.simplifyspan.unit;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 /**
@@ -10,6 +11,7 @@ import android.graphics.Bitmap;
 public class SpecialImageUnit extends BaseSpecialUnit {
     private static final String DEF_IMG_PLACEHOLDER = "img";
 
+    private Context context;
     private Bitmap bitmap;
     private int bgColor;
     private boolean isClickable;
@@ -17,62 +19,71 @@ public class SpecialImageUnit extends BaseSpecialUnit {
     private int height; // px
 
     /**
+     * @param context     Context
      * @param bitmap      Bitmap
      */
-    public SpecialImageUnit(Bitmap bitmap) {
-        this(DEF_IMG_PLACEHOLDER, bitmap);
+    public SpecialImageUnit(Context context, Bitmap bitmap) {
+        this(context, DEF_IMG_PLACEHOLDER, bitmap);
     }
 
     /**
+     * @param context     Context
      * @param specialText Special Text
      * @param bitmap      Bitmap
      */
-    public SpecialImageUnit(String specialText, Bitmap bitmap) {
+    public SpecialImageUnit(Context context, String specialText, Bitmap bitmap) {
         super(specialText);
+        this.context = context;
         this.bitmap = bitmap;
     }
 
     /**
+     * @param context     Context
      * @param bitmap      Bitmap
      * @param width       Width
      * @param height      Height
      */
-    public SpecialImageUnit(Bitmap bitmap, int width, int height) {
-        this(DEF_IMG_PLACEHOLDER, bitmap, width, height);
+    public SpecialImageUnit(Context context, Bitmap bitmap, int width, int height) {
+        this(context, DEF_IMG_PLACEHOLDER, bitmap, width, height);
     }
 
     /**
+     * @param context     Context
      * @param specialText Special Text
      * @param bitmap      Bitmap
      * @param width       Width
      * @param height      Height
      */
-    public SpecialImageUnit(String specialText, Bitmap bitmap, int width, int height) {
+    public SpecialImageUnit(Context context, String specialText, Bitmap bitmap, int width, int height) {
         super(specialText);
+        this.context = context;
         this.bitmap = bitmap;
         this.width = width;
         this.height = height;
     }
 
     /**
+     * @param context     Context
      * @param bitmap      Bitmap
      * @param width       Width
      * @param height      Height
      * @param gravity     Use SpecialGravity.xx
      */
-    public SpecialImageUnit(Bitmap bitmap, int width, int height, int gravity) {
-        this(DEF_IMG_PLACEHOLDER, bitmap, width, height, gravity);
+    public SpecialImageUnit(Context context, Bitmap bitmap, int width, int height, int gravity) {
+        this(context, DEF_IMG_PLACEHOLDER, bitmap, width, height, gravity);
     }
 
     /**
+     * @param context     Context
      * @param specialText Special Text
      * @param bitmap      Bitmap
      * @param width       Width
      * @param height      Height
      * @param gravity     Use SpecialGravity.xx
      */
-    public SpecialImageUnit(String specialText, Bitmap bitmap, int width, int height, int gravity) {
+    public SpecialImageUnit(Context context, String specialText, Bitmap bitmap, int width, int height, int gravity) {
         super(specialText);
+        this.context = context;
         this.bitmap = bitmap;
         this.width = width;
         this.height = height;
@@ -141,4 +152,7 @@ public class SpecialImageUnit extends BaseSpecialUnit {
         return bgColor;
     }
 
+    public Context getContext() {
+        return context;
+    }
 }

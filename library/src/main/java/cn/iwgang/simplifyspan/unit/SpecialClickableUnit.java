@@ -1,5 +1,7 @@
 package cn.iwgang.simplifyspan.unit;
 
+import android.widget.TextView;
+
 import java.util.List;
 
 import cn.iwgang.simplifyspan.other.OnClickStateChangeListener;
@@ -13,6 +15,7 @@ import cn.iwgang.simplifyspan.other.OnClickableSpanListener;
 public class SpecialClickableUnit extends BaseSpecialUnit {
     private List<OnClickStateChangeListener> onClickStateChangeListeners;
     private OnClickableSpanListener onClickListener;
+    private TextView curTextView;
     private int normalBgColor;
     private int pressBgColor;
     // only text
@@ -20,8 +23,9 @@ public class SpecialClickableUnit extends BaseSpecialUnit {
     private int normalTextColor;
     private int pressTextColor;
 
-    public SpecialClickableUnit(OnClickableSpanListener onClickListener) {
+    public SpecialClickableUnit(TextView curTextView, OnClickableSpanListener onClickListener) {
         super(null);
+        this.curTextView = curTextView;
         this.onClickListener = onClickListener;
     }
 
@@ -72,6 +76,10 @@ public class SpecialClickableUnit extends BaseSpecialUnit {
 
     public int getNormalTextColor() {
         return normalTextColor;
+    }
+
+    public TextView getCurTextView() {
+        return curTextView;
     }
 
     public List<OnClickStateChangeListener> getOnClickStateChangeListeners() {

@@ -25,15 +25,29 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
     private boolean isClickable;
     private int bgColor;
 
-    public SpecialLabelUnit(String specialText, int labelTextColor, float labelTextSize, int labelBgColor) {
-        super(specialText);
+    /**
+     * @param labelText      label text
+     * @param labelTextColor label text color
+     * @param labelTextSize  label text size (unit：xp)
+     * @param labelBgColor   label background color
+     */
+    public SpecialLabelUnit(String labelText, int labelTextColor, float labelTextSize, int labelBgColor) {
+        super(labelText);
         this.labelTextSize = labelTextSize;
         this.labelTextColor = labelTextColor;
         this.labelBgColor = labelBgColor;
     }
 
-    public SpecialLabelUnit(String specialText, int labelTextColor, float labelTextSize, int labelBgColor, int labelBgWidth, int labelBgHeight) {
-        super(specialText);
+    /**
+     * @param labelText      label text
+     * @param labelTextColor label text color
+     * @param labelTextSize  label text size (unit：xp)
+     * @param labelBgColor   label background color
+     * @param labelBgWidth   label background width
+     * @param labelBgHeight  label background height
+     */
+    public SpecialLabelUnit(String labelText, int labelTextColor, float labelTextSize, int labelBgColor, int labelBgWidth, int labelBgHeight) {
+        super(labelText);
         this.labelTextSize = labelTextSize;
         this.labelTextColor = labelTextColor;
         this.labelBgColor = labelBgColor;
@@ -41,15 +55,29 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
         this.labelBgHeight = labelBgHeight;
     }
 
-    public SpecialLabelUnit(String specialText, int labelTextColor, float labelTextSize, Bitmap bitmap) {
-        super(specialText);
+    /**
+     * @param labelText      label text
+     * @param labelTextColor label text color
+     * @param labelTextSize  label text size (unit：xp)
+     * @param bitmap         label background image bitmap
+     */
+    public SpecialLabelUnit(String labelText, int labelTextColor, float labelTextSize, Bitmap bitmap) {
+        super(labelText);
         this.labelTextSize = labelTextSize;
         this.labelTextColor = labelTextColor;
         this.mBitmap = bitmap;
     }
 
-    public SpecialLabelUnit(String specialText, int labelTextColor, float labelTextSize, Bitmap bitmap, int labelBgWidth, int labelBgHeight) {
-        super(specialText);
+    /**
+     * @param labelText      label text
+     * @param labelTextColor label text color
+     * @param labelTextSize  label text size (unit：xp)
+     * @param bitmap         label background image bitmap
+     * @param labelBgWidth   label background width
+     * @param labelBgHeight  label background height
+     */
+    public SpecialLabelUnit(String labelText, int labelTextColor, float labelTextSize, Bitmap bitmap, int labelBgWidth, int labelBgHeight) {
+        super(labelText);
         this.labelTextSize = labelTextSize;
         this.labelTextColor = labelTextColor;
         this.mBitmap = bitmap;
@@ -72,6 +100,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
         this.padding = padding;
         return this;
     }
+
     public SpecialLabelUnit setPaddingLeft(int paddingLeft) {
         this.paddingLeft = paddingLeft;
         return this;
@@ -106,6 +135,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
 
     /**
      * Set Gravity
+     *
      * @param gravity use SpecialGravity.xx
      * @return
      */
@@ -116,6 +146,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
 
     /**
      * Set Convert Mode
+     *
      * @param convertMode use SpecialConvertMode.xx
      * @return
      */
@@ -142,7 +173,8 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
 
     /**
      * label Text Size
-     * @return px (Convert in SimplifySpanBuild)
+     *
+     * @return px
      */
     public float getLabelTextSize() {
         return labelTextSize;
@@ -170,6 +202,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
 
     /**
      * Use only in SimplifySpanBuild
+     *
      * @param clickable
      */
     public void setClickable(boolean clickable) {
@@ -200,11 +233,4 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
         return bgColor;
     }
 
-    /**
-     * Use only in SimplifySpanBuild
-     * @param pxLabelTextSize
-     */
-    public void convertLabelTextSize(float pxLabelTextSize) {
-        this.labelTextSize = pxLabelTextSize;
-    }
 }

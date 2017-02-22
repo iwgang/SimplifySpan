@@ -1,12 +1,12 @@
 package cn.iwgang.simplifyspan;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.ThumbnailUtils;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
@@ -27,6 +27,7 @@ import cn.iwgang.simplifyspan.customspan.CustomLabelSpan;
 import cn.iwgang.simplifyspan.other.CustomLinkMovementMethod;
 import cn.iwgang.simplifyspan.other.OnClickStateChangeListener;
 import cn.iwgang.simplifyspan.other.SpecialConvertMode;
+import cn.iwgang.simplifyspan.other.SpecialGravity;
 import cn.iwgang.simplifyspan.unit.BaseSpecialUnit;
 import cn.iwgang.simplifyspan.unit.SpecialClickableUnit;
 import cn.iwgang.simplifyspan.unit.SpecialImageUnit;
@@ -44,33 +45,29 @@ public class SimplifySpanBuild {
     private List<BaseSpecialUnit> mBeforeSpecialUnit;
     private StringBuilder mStringBuilder;
     private StringBuilder mBeforeStringBuilder;
-    private Context mContext;
-    private TextView mTextView;
     private Map<SpecialClickableUnit, PositionInfo> mBeforeCacheSpecialClickableUnitMap = new HashMap<>();
     private Map<SpecialClickableUnit, PositionInfo> mCacheSpecialClickableUnitMap = new HashMap<>();
 
     private StringBuilder mNormalSizeText;
 
-    public SimplifySpanBuild(Context context, TextView textView) {
-        this(context, textView, null);
+    public SimplifySpanBuild() {
+        this(null);
     }
 
-    public SimplifySpanBuild(Context context, TextView textView, String initializeNormalText) {
-        init(context, textView, initializeNormalText);
+    public SimplifySpanBuild(String initializeNormalText) {
+        init(initializeNormalText);
     }
 
-    public SimplifySpanBuild(Context context, TextView textView, String initializeNormalText, BaseSpecialUnit... normalSpecialUnits) {
-        init(context, textView, initializeNormalText, normalSpecialUnits);
+    public SimplifySpanBuild(String initializeNormalText, BaseSpecialUnit... normalSpecialUnits) {
+        init(initializeNormalText, normalSpecialUnits);
     }
 
-    private void init(Context context, TextView textView, String initializeNormalText, BaseSpecialUnit... normalSpecialUnits) {
+    private void init(String initializeNormalText, BaseSpecialUnit... normalSpecialUnits) {
         mStringBuilder = new StringBuilder(TextUtils.isEmpty(initializeNormalText) ? "" : initializeNormalText);
         mBeforeStringBuilder = new StringBuilder("");
         mNormalSizeText = new StringBuilder("");
         mFinalSpecialUnit = new ArrayList<>();
         mBeforeSpecialUnit = new ArrayList<>();
-        this.mContext = context;
-        this.mTextView = textView;
 
         if (!TextUtils.isEmpty(initializeNormalText)) {
             if (null != normalSpecialUnits && normalSpecialUnits.length > 0) {
@@ -122,11 +119,11 @@ public class SimplifySpanBuild {
             }
 
             int[] startPossTemp = st.getStartPoss();
-            if (null == startPossTemp || startPossTemp.length == 0) continue ;
+            if (null == startPossTemp || startPossTemp.length == 0) continue;
 
             // excluding content
             if (st instanceof SpecialTextUnit) {
-                SpecialTextUnit specialTextUnit = (SpecialTextUnit)st;
+                SpecialTextUnit specialTextUnit = (SpecialTextUnit) st;
 
                 if (specialTextUnit.getTextSize() > 0) {
                     if (startPossTemp.length > 1) {
@@ -168,6 +165,7 @@ public class SimplifySpanBuild {
 
     /**
      * append SpecialUnit
+     *
      * @param specialUnit SpecialUnit (Not support convertMode)
      * @return SimplifySpanBuild
      */
@@ -186,8 +184,9 @@ public class SimplifySpanBuild {
 
     /**
      * append normal text
-     * @param text                normal text
-     * @param normalSpecialUnits  [Optional] normal SpecialUnit list (support convertMode)
+     *
+     * @param text               normal text
+     * @param normalSpecialUnits [Optional] normal SpecialUnit list (support convertMode)
      * @return SimplifySpanBuild
      */
     public SimplifySpanBuild appendNormalText(String text, BaseSpecialUnit... normalSpecialUnits) {
@@ -205,7 +204,8 @@ public class SimplifySpanBuild {
 
     /**
      * append SpecialUnit to first (Behind the existing BeforeContent)
-     * @param specialUnit  (Not support convertMode)
+     *
+     * @param specialUnit (Not support convertMode)
      * @return SimplifySpanBuild
      */
     public SimplifySpanBuild appendSpecialUnitToFirst(BaseSpecialUnit specialUnit) {
@@ -224,8 +224,9 @@ public class SimplifySpanBuild {
 
     /**
      * append normal text to first (Behind the existing BeforeContent)
-     * @param text                normal text
-     * @param normalSpecialUnits  [Optional] normal SpecialUnit list (support convertMode)
+     *
+     * @param text               normal text
+     * @param normalSpecialUnits [Optional] normal SpecialUnit list (support convertMode)
      * @return SimplifySpanBuild
      */
     public SimplifySpanBuild appendNormalTextToFirst(String text, BaseSpecialUnit... normalSpecialUnits) {
@@ -243,6 +244,7 @@ public class SimplifySpanBuild {
 
     /**
      * append multi clickable SpecialUnit or String
+     *
      * @param specialClickableUnit SpecialClickableUnit
      * @param specialUnitOrStrings Unit Or String
      * @return
@@ -254,6 +256,7 @@ public class SimplifySpanBuild {
 
     /**
      * append multi clickable SpecialUnit or String to first (Behind the existing BeforeContent)
+     *
      * @param specialClickableUnit SpecialClickableUnit
      * @param specialUnitOrStrings Unit Or String
      * @return
@@ -265,6 +268,7 @@ public class SimplifySpanBuild {
 
     /**
      * Build
+     *
      * @return SpannableStringBuilder
      */
     public SpannableStringBuilder build() {
@@ -276,7 +280,7 @@ public class SimplifySpanBuild {
                 for (BaseSpecialUnit specialUnit : mFinalSpecialUnit) {
                     int[] tempStartPoss = specialUnit.getStartPoss();
 
-                    if (null == tempStartPoss || tempStartPoss.length == 0) continue ;
+                    if (null == tempStartPoss || tempStartPoss.length == 0) continue;
 
                     for (int i = 0; i < tempStartPoss.length; i++) {
                         int oldStartPos = tempStartPoss[i];
@@ -302,7 +306,8 @@ public class SimplifySpanBuild {
         }
 
         if (mStringBuilder.length() == 0) return null;
-        if (mFinalSpecialUnit.isEmpty()) return new SpannableStringBuilder(mStringBuilder.toString());
+        if (mFinalSpecialUnit.isEmpty())
+            return new SpannableStringBuilder(mStringBuilder.toString());
 
         if (mNormalSizeText.length() == 0) mNormalSizeText.append(mStringBuilder);
 
@@ -313,12 +318,13 @@ public class SimplifySpanBuild {
             String specialText = st.getSpecialText();
             int[] startPoss = st.getStartPoss();
 
-            if (TextUtils.isEmpty(specialText) || null == startPoss || startPoss.length == 0) continue;
+            if (TextUtils.isEmpty(specialText) || null == startPoss || startPoss.length == 0)
+                continue;
 
             int specialTextLength = specialText.length();
             if (st instanceof SpecialTextUnit) {
                 // text span
-                SpecialTextUnit specialTextUnit = (SpecialTextUnit)st;
+                SpecialTextUnit specialTextUnit = (SpecialTextUnit) st;
 
                 final SpecialClickableUnit internalSpecialClickableUnit = specialTextUnit.getSpecialClickableUnit();
                 if (null != internalSpecialClickableUnit) {
@@ -357,21 +363,30 @@ public class SimplifySpanBuild {
 
                     // Set Text Size
                     if (specialTextUnit.getTextSize() > 0) {
-                        spannableStringBuilder.setSpan(new CustomAbsoluteSizeSpan(normalSizeText, specialTextUnit.getSpecialText(), Math.round(specialTextUnit.getTextSize()), mTextView, specialTextUnit.getGravity()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        TextView curTextView = specialTextUnit.getCurTextView();
+                        int gravity = specialTextUnit.getGravity();
+                        if (gravity != SpecialGravity.BOTTOM && null != curTextView) {
+                            spannableStringBuilder.setSpan(new CustomAbsoluteSizeSpan(normalSizeText, specialTextUnit.getSpecialText(), Math.round(specialTextUnit.getTextSize()), curTextView, gravity), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        } else {
+                            spannableStringBuilder.setSpan(new AbsoluteSizeSpan(Math.round(specialTextUnit.getTextSize()), true), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
                     }
 
                     // set clickable
                     if (null != internalSpecialClickableUnit) {
                         if (!isInitClickListener) {
                             isInitClickListener = true;
-                            mTextView.setMovementMethod(CustomLinkMovementMethod.getInstance());
+                            TextView curTextView = internalSpecialClickableUnit.getCurTextView();
+                            if (null != curTextView) {
+                                curTextView.setMovementMethod(CustomLinkMovementMethod.getInstance());
+                            }
                         }
                         spannableStringBuilder.setSpan(new CustomClickableSpan(internalSpecialClickableUnit), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
             } else if (st instanceof SpecialImageUnit) {
                 // image Span
-                SpecialImageUnit specialImageUnit = (SpecialImageUnit)st;
+                SpecialImageUnit specialImageUnit = (SpecialImageUnit) st;
                 Bitmap bitmap = specialImageUnit.getBitmap();
                 int imgWidth = specialImageUnit.getWidth();
                 int imgHeight = specialImageUnit.getHeight();
@@ -389,7 +404,7 @@ public class SimplifySpanBuild {
                 }
 
                 for (int startPos : startPoss) {
-                    CustomImageSpan curCustomImageSpan = new CustomImageSpan(mContext, normalSizeText, specialImageUnit);
+                    CustomImageSpan curCustomImageSpan = new CustomImageSpan(normalSizeText, specialImageUnit);
                     spannableStringBuilder.setSpan(curCustomImageSpan, startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     if (specialImageUnit.isClickable()) {
@@ -398,9 +413,7 @@ public class SimplifySpanBuild {
                 }
             } else if (st instanceof SpecialLabelUnit) {
                 // label span
-                SpecialLabelUnit specialLabelUnit = (SpecialLabelUnit)st;
-                specialLabelUnit.convertLabelTextSize(sp2px(mContext, specialLabelUnit.getLabelTextSize()));
-
+                SpecialLabelUnit specialLabelUnit = (SpecialLabelUnit) st;
                 for (int startPos : startPoss) {
                     CustomLabelSpan curCustomLabelSpan = new CustomLabelSpan(normalSizeText, specialLabelUnit);
                     spannableStringBuilder.setSpan(curCustomLabelSpan, startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -411,18 +424,21 @@ public class SimplifySpanBuild {
                 }
             } else if (st instanceof SpecialClickableUnit) {
                 // clickable span
-                SpecialClickableUnit specialClickableUnit = (SpecialClickableUnit)st;
+                SpecialClickableUnit specialClickableUnit = (SpecialClickableUnit) st;
 
                 if (!isInitClickListener) {
                     isInitClickListener = true;
-                    mTextView.setMovementMethod(CustomLinkMovementMethod.getInstance());
+                    TextView curTextView = specialClickableUnit.getCurTextView();
+                    if (null != curTextView) {
+                        curTextView.setMovementMethod(CustomLinkMovementMethod.getInstance());
+                    }
                 }
 
                 int startPos = startPoss[0];
                 spannableStringBuilder.setSpan(new CustomClickableSpan(specialClickableUnit), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }  else if (st instanceof SpecialRawSpanUnit) {
+            } else if (st instanceof SpecialRawSpanUnit) {
                 // raw span
-                SpecialRawSpanUnit specialRawSpanUnit = (SpecialRawSpanUnit)st;
+                SpecialRawSpanUnit specialRawSpanUnit = (SpecialRawSpanUnit) st;
 
                 int startPos = startPoss[0];
                 spannableStringBuilder.setSpan(specialRawSpanUnit.getSpanObj(), startPos, startPos + specialTextLength, specialRawSpanUnit.getFlags());
@@ -435,7 +451,8 @@ public class SimplifySpanBuild {
     }
 
     private void processMultiClickableSpecialUnit(boolean isToFirst, SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
-        if (null == specialClickableUnit || null == specialUnitOrStrings || specialUnitOrStrings.length == 0) return ;
+        if (null == specialClickableUnit || null == specialUnitOrStrings || specialUnitOrStrings.length == 0)
+            return;
 
         StringBuilder tempStrBuild = new StringBuilder();
         int baseStartPos;
@@ -446,10 +463,10 @@ public class SimplifySpanBuild {
         }
         for (Object su : specialUnitOrStrings) {
             if (su instanceof SpecialTextUnit) {
-                SpecialTextUnit specialTextUnit = (SpecialTextUnit)su;
+                SpecialTextUnit specialTextUnit = (SpecialTextUnit) su;
 
                 String specialText = specialTextUnit.getSpecialText();
-                if (TextUtils.isEmpty(specialText)) continue ;
+                if (TextUtils.isEmpty(specialText)) continue;
 
                 specialTextUnit.setSpecialClickableUnit(null);
 
@@ -462,10 +479,10 @@ public class SimplifySpanBuild {
                 }
                 tempStrBuild.append(specialText);
             } else if (su instanceof SpecialImageUnit) {
-                SpecialImageUnit specialImageUnit = (SpecialImageUnit)su;
+                SpecialImageUnit specialImageUnit = (SpecialImageUnit) su;
 
                 String specialText = specialImageUnit.getSpecialText();
-                if (TextUtils.isEmpty(specialText)) continue ;
+                if (TextUtils.isEmpty(specialText)) continue;
 
                 specialImageUnit.setClickable(true);
                 if (specialImageUnit.getBgColor() == 0 && specialClickableUnit.getNormalBgColor() != 0) {
@@ -481,10 +498,10 @@ public class SimplifySpanBuild {
                 }
                 tempStrBuild.append(specialText);
             } else if (su instanceof SpecialLabelUnit) {
-                SpecialLabelUnit specialLabelUnit = (SpecialLabelUnit)su;
+                SpecialLabelUnit specialLabelUnit = (SpecialLabelUnit) su;
 
                 String specialText = specialLabelUnit.getSpecialText();
-                if (TextUtils.isEmpty(specialText)) continue ;
+                if (TextUtils.isEmpty(specialText)) continue;
 
                 specialLabelUnit.setClickable(true);
                 if (specialLabelUnit.getBgColor() == 0 && specialClickableUnit.getNormalBgColor() != 0) {
@@ -520,7 +537,7 @@ public class SimplifySpanBuild {
     }
 
     private void addClickStateChangeListeners(int startPos, int endPos, OnClickStateChangeListener onClickStateChangeListener) {
-        if (mCacheSpecialClickableUnitMap.isEmpty()) return ;
+        if (mCacheSpecialClickableUnitMap.isEmpty()) return;
 
         for (Map.Entry<SpecialClickableUnit, PositionInfo> cm : mCacheSpecialClickableUnitMap.entrySet()) {
             PositionInfo curPositionInfo = cm.getValue();
@@ -534,14 +551,9 @@ public class SimplifySpanBuild {
                     curCacheSpecialClickableUnit.setOnClickStateChangeListeners(onClickStateChangeListeners);
                 }
                 onClickStateChangeListeners.add(onClickStateChangeListener);
-                break ;
+                break;
             }
         }
-    }
-
-    public static float sp2px(Context context, float spValue) {
-        final float scale = context.getResources().getDisplayMetrics().scaledDensity;
-        return spValue * scale;
     }
 
     static class PositionInfo {

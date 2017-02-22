@@ -1,5 +1,7 @@
 package cn.iwgang.simplifyspan.unit;
 
+import android.widget.TextView;
+
 /**
  * Text Special Unit
  * Created by iWgang on 15/12/3.
@@ -13,17 +15,18 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     private boolean isShowStrikeThrough;
     private boolean isTextBold;
     private SpecialClickableUnit specialClickableUnit;
+    private TextView curTextView;
 
     /**
-     * @param specialText       Special Text
+     * @param specialText special text
      */
     public SpecialTextUnit(String specialText) {
         super(specialText);
     }
 
     /**
-     * @param specialText       Special Text
-     * @param specialTextColor  special Text Color
+     * @param specialText      special text
+     * @param specialTextColor special Text Color
      */
     public SpecialTextUnit(String specialText, int specialTextColor) {
         this(specialText);
@@ -31,9 +34,9 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     }
 
     /**
-     * @param specialText       Special Text
-     * @param specialTextColor  special Text Color
-     * @param textSize          Special Text Size (sp)
+     * @param specialText      special text
+     * @param specialTextColor special text color
+     * @param textSize         special text size (unit：sp)
      */
     public SpecialTextUnit(String specialText, int specialTextColor, float textSize) {
         this(specialText);
@@ -42,20 +45,23 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     }
 
     /**
-     * @param specialText       Special Text
-     * @param specialTextColor  special Text Color
-     * @param textSize          Special Text Size (sp)
-     * @param gravity           Use SpecialGravity.xx
+     * @param specialText      special text
+     * @param specialTextColor special text color
+     * @param textSize         special text size (unit：sp)
+     * @param gravity          use SpecialGravity.xx
+     * @param curTextView      current TextView
      */
-    public SpecialTextUnit(String specialText, int specialTextColor, float textSize, int gravity) {
+    public SpecialTextUnit(String specialText, int specialTextColor, float textSize, int gravity, TextView curTextView) {
         this(specialText);
         this.specialTextColor = specialTextColor;
         this.textSize = textSize;
         this.gravity = gravity;
+        this.curTextView = curTextView;
     }
 
     /**
      * Show StrikeThrough
+     *
      * @return SpecialTextUnit
      */
     public SpecialTextUnit showStrikeThrough() {
@@ -65,6 +71,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     /**
      * Show Underline
+     *
      * @return SpecialTextUnit
      */
     public SpecialTextUnit showUnderline() {
@@ -74,6 +81,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     /**
      * Use Text Bold
+     *
      * @return SpecialTextUnit
      */
     public SpecialTextUnit useTextBold() {
@@ -83,6 +91,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     /**
      * Set Background Color
+     *
      * @param specialTextBackgroundColor color
      * @return SpecialTextUnit
      */
@@ -93,6 +102,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     /**
      * Set Special Text Color
+     *
      * @param specialTextColor color
      * @return SpecialTextUnit
      */
@@ -103,6 +113,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     /**
      * Set Special Text Size
+     *
      * @param textSize size (sp)
      * @return SpecialTextUnit
      */
@@ -113,6 +124,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     /**
      * Set SpecialClickableUnit
+     *
      * @param specialClickableUnit SpecialClickableUnit
      * @return SpecialTextUnit
      */
@@ -123,16 +135,20 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     /**
      * Set Gravity
-     * @param gravity use SpecialGravity.xx
+     *
+     * @param curTextView current TextView
+     * @param gravity     use SpecialGravity.xx
      * @return SpecialTextUnit
      */
-    public SpecialTextUnit setGravity(int gravity) {
+    public SpecialTextUnit setGravity(TextView curTextView, int gravity) {
         this.gravity = gravity;
+        this.curTextView = curTextView;
         return this;
     }
 
     /**
      * Set Convert Mode
+     *
      * @param convertMode use SpecialConvertMode.xx
      * @return SpecialTextUnit
      */
@@ -163,6 +179,10 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     public boolean isTextBold() {
         return isTextBold;
+    }
+
+    public TextView getCurTextView() {
+        return curTextView;
     }
 
     public SpecialClickableUnit getSpecialClickableUnit() {
