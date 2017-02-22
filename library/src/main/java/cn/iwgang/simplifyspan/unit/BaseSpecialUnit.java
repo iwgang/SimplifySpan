@@ -9,17 +9,17 @@ import cn.iwgang.simplifyspan.other.SpecialGravity;
  * https://github.com/iwgang/SimplifySpan
  */
 public class BaseSpecialUnit {
-    protected String specialText;
+    protected String text;
     private int[] startPoss;
     protected int gravity = SpecialGravity.BOTTOM;
     protected int convertMode = SpecialConvertMode.ONLY_FIRST;
 
-    public BaseSpecialUnit(String specialText) {
-        this.specialText = specialText;
+    public BaseSpecialUnit(String text) {
+        this.text = text;
     }
 
-    public String getSpecialText() {
-        return specialText;
+    public String getText() {
+        return text;
     }
 
     public int getGravity() {

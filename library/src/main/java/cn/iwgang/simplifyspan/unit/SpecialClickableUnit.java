@@ -54,6 +54,11 @@ public class SpecialClickableUnit extends BaseSpecialUnit {
         return this;
     }
 
+    /**
+     * Do not call !!! (Use only in SimplifySpanBuild)
+     *
+     * @param onClickStateChangeListeners OnClickStateChangeListener list
+     */
     public void setOnClickStateChangeListeners(List<OnClickStateChangeListener> onClickStateChangeListeners) {
         this.onClickStateChangeListeners = onClickStateChangeListeners;
     }
@@ -90,8 +95,13 @@ public class SpecialClickableUnit extends BaseSpecialUnit {
         return isShowUnderline;
     }
 
-    public void setSpecialText(String specialText) {
-        this.specialText = specialText;
+    /**
+     * Do not call !!! (Use only in SimplifySpanBuild)
+     *
+     * @param text text
+     */
+    public void setText(String text) {
+        this.text = text;
     }
 
 }

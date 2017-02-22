@@ -45,11 +45,11 @@ public class CustomLabelSpan extends ReplacementSpan implements OnClickStateChan
     private int pressBgColor;
 
     public CustomLabelSpan(String normalSizeText, SpecialLabelUnit specialLabelUnit) {
-        this.mSpecialLabelUnit = specialLabelUnit;
-        mSpecialText = mSpecialLabelUnit.getSpecialText();
-        this.mNormalSizeText = normalSizeText;
-        this.isClickable = mSpecialLabelUnit.isClickable();
-        this.mBgColor = mSpecialLabelUnit.getBgColor();
+        mSpecialLabelUnit = specialLabelUnit;
+        mSpecialText = mSpecialLabelUnit.getText();
+        mNormalSizeText = normalSizeText;
+        isClickable = mSpecialLabelUnit.isClickable();
+        mBgColor = mSpecialLabelUnit.getBgColor();
 
         mBitmap = mSpecialLabelUnit.getBitmap();
         if (null == mBitmap) {

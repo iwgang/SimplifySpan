@@ -82,7 +82,7 @@ public class SimplifySpanBuild {
         Map<String, Boolean> delTextTagMap = new HashMap<>();
         List<Integer> otherSpecialTextStartPos;
         for (BaseSpecialUnit st : normalSpecialUnits) {
-            String specialText = st.getSpecialText();
+            String specialText = st.getText();
 
             if (TextUtils.isEmpty(specialText) || !finalText.contains(specialText)) continue;
 
@@ -169,10 +169,10 @@ public class SimplifySpanBuild {
      * @param specialUnit SpecialUnit (Not support convertMode)
      * @return SimplifySpanBuild
      */
-    public SimplifySpanBuild appendSpecialUnit(BaseSpecialUnit specialUnit) {
+    public SimplifySpanBuild append(BaseSpecialUnit specialUnit) {
         if (null == specialUnit) return this;
 
-        String specialText = specialUnit.getSpecialText();
+        String specialText = specialUnit.getText();
         if (TextUtils.isEmpty(specialText)) return this;
 
         // process start pos
@@ -185,19 +185,13 @@ public class SimplifySpanBuild {
     /**
      * append normal text
      *
-     * @param text               normal text
-     * @param normalSpecialUnits [Optional] normal SpecialUnit list (support convertMode)
+     * @param text normal text
      * @return SimplifySpanBuild
      */
-    public SimplifySpanBuild appendNormalText(String text, BaseSpecialUnit... normalSpecialUnits) {
+    public SimplifySpanBuild append(String text) {
         if (TextUtils.isEmpty(text)) return this;
 
-        if (null != normalSpecialUnits && normalSpecialUnits.length > 0) {
-            buildNormalSpecialUnits(false, mStringBuilder.length(), text, normalSpecialUnits);
-        } else {
-            mNormalSizeText.append(text);
-        }
-
+        mNormalSizeText.append(text);
         mStringBuilder.append(text);
         return this;
     }
@@ -208,10 +202,10 @@ public class SimplifySpanBuild {
      * @param specialUnit (Not support convertMode)
      * @return SimplifySpanBuild
      */
-    public SimplifySpanBuild appendSpecialUnitToFirst(BaseSpecialUnit specialUnit) {
+    public SimplifySpanBuild appendToFirst(BaseSpecialUnit specialUnit) {
         if (null == specialUnit) return this;
 
-        String specialText = specialUnit.getSpecialText();
+        String specialText = specialUnit.getText();
         if (TextUtils.isEmpty(specialText)) return this;
 
         // process start pos
@@ -225,19 +219,13 @@ public class SimplifySpanBuild {
     /**
      * append normal text to first (Behind the existing BeforeContent)
      *
-     * @param text               normal text
-     * @param normalSpecialUnits [Optional] normal SpecialUnit list (support convertMode)
+     * @param text normal text
      * @return SimplifySpanBuild
      */
-    public SimplifySpanBuild appendNormalTextToFirst(String text, BaseSpecialUnit... normalSpecialUnits) {
+    public SimplifySpanBuild appendToFirst(String text) {
         if (TextUtils.isEmpty(text)) return this;
 
-        if (null != normalSpecialUnits && normalSpecialUnits.length > 0) {
-            buildNormalSpecialUnits(true, mBeforeStringBuilder.length(), text, normalSpecialUnits);
-        } else {
-            mNormalSizeText.append(text);
-        }
-
+        mNormalSizeText.append(text);
         mBeforeStringBuilder.append(text);
         return this;
     }
@@ -249,7 +237,7 @@ public class SimplifySpanBuild {
      * @param specialUnitOrStrings Unit Or String
      * @return
      */
-    public SimplifySpanBuild appendMultiClickableSpecialUnit(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
+    public SimplifySpanBuild appendMultiClickable(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
         processMultiClickableSpecialUnit(false, specialClickableUnit, specialUnitOrStrings);
         return this;
     }
@@ -261,7 +249,7 @@ public class SimplifySpanBuild {
      * @param specialUnitOrStrings Unit Or String
      * @return
      */
-    public SimplifySpanBuild appendMultiClickableSpecialUnitToFirst(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
+    public SimplifySpanBuild appendMultiClickableToFirst(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
         processMultiClickableSpecialUnit(true, specialClickableUnit, specialUnitOrStrings);
         return this;
     }
@@ -315,7 +303,7 @@ public class SimplifySpanBuild {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(mStringBuilder);
         boolean isInitClickListener = false;
         for (BaseSpecialUnit st : mFinalSpecialUnit) {
-            String specialText = st.getSpecialText();
+            String specialText = st.getText();
             int[] startPoss = st.getStartPoss();
 
             if (TextUtils.isEmpty(specialText) || null == startPoss || startPoss.length == 0)
@@ -329,21 +317,21 @@ public class SimplifySpanBuild {
                 final SpecialClickableUnit internalSpecialClickableUnit = specialTextUnit.getSpecialClickableUnit();
                 if (null != internalSpecialClickableUnit) {
                     if (internalSpecialClickableUnit.getNormalTextColor() == 0) {
-                        internalSpecialClickableUnit.setNormalTextColor(specialTextUnit.getSpecialTextColor());
+                        internalSpecialClickableUnit.setNormalTextColor(specialTextUnit.getTextColor());
                     }
                     if (internalSpecialClickableUnit.getNormalBgColor() == 0) {
-                        internalSpecialClickableUnit.setNormalBgColor(specialTextUnit.getSpecialTextBackgroundColor());
+                        internalSpecialClickableUnit.setNormalBgColor(specialTextUnit.getTextBackgroundColor());
                     }
                 }
                 for (int startPos : startPoss) {
                     // Set Text Color
-                    if (specialTextUnit.getSpecialTextColor() != 0) {
-                        spannableStringBuilder.setSpan(new ForegroundColorSpan(specialTextUnit.getSpecialTextColor()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    if (specialTextUnit.getTextColor() != 0) {
+                        spannableStringBuilder.setSpan(new ForegroundColorSpan(specialTextUnit.getTextColor()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
 
                     // Set Text Background Color
-                    if (specialTextUnit.getSpecialTextBackgroundColor() != 0 && null == internalSpecialClickableUnit) {
-                        spannableStringBuilder.setSpan(new BackgroundColorSpan(specialTextUnit.getSpecialTextBackgroundColor()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    if (specialTextUnit.getTextBackgroundColor() != 0 && null == internalSpecialClickableUnit) {
+                        spannableStringBuilder.setSpan(new BackgroundColorSpan(specialTextUnit.getTextBackgroundColor()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
 
                     // Add Underline
@@ -366,7 +354,7 @@ public class SimplifySpanBuild {
                         TextView curTextView = specialTextUnit.getCurTextView();
                         int gravity = specialTextUnit.getGravity();
                         if (gravity != SpecialGravity.BOTTOM && null != curTextView) {
-                            spannableStringBuilder.setSpan(new CustomAbsoluteSizeSpan(normalSizeText, specialTextUnit.getSpecialText(), Math.round(specialTextUnit.getTextSize()), curTextView, gravity), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            spannableStringBuilder.setSpan(new CustomAbsoluteSizeSpan(normalSizeText, specialTextUnit.getText(), Math.round(specialTextUnit.getTextSize()), curTextView, gravity), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         } else {
                             spannableStringBuilder.setSpan(new AbsoluteSizeSpan(Math.round(specialTextUnit.getTextSize()), true), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
@@ -465,10 +453,10 @@ public class SimplifySpanBuild {
             if (su instanceof SpecialTextUnit) {
                 SpecialTextUnit specialTextUnit = (SpecialTextUnit) su;
 
-                String specialText = specialTextUnit.getSpecialText();
+                String specialText = specialTextUnit.getText();
                 if (TextUtils.isEmpty(specialText)) continue;
 
-                specialTextUnit.setSpecialClickableUnit(null);
+                specialTextUnit.setClickableUnit(null);
 
                 // process start pos
                 specialTextUnit.setStartPoss(new int[]{baseStartPos + tempStrBuild.length()});
@@ -481,7 +469,7 @@ public class SimplifySpanBuild {
             } else if (su instanceof SpecialImageUnit) {
                 SpecialImageUnit specialImageUnit = (SpecialImageUnit) su;
 
-                String specialText = specialImageUnit.getSpecialText();
+                String specialText = specialImageUnit.getText();
                 if (TextUtils.isEmpty(specialText)) continue;
 
                 specialImageUnit.setClickable(true);
@@ -500,7 +488,7 @@ public class SimplifySpanBuild {
             } else if (su instanceof SpecialLabelUnit) {
                 SpecialLabelUnit specialLabelUnit = (SpecialLabelUnit) su;
 
-                String specialText = specialLabelUnit.getSpecialText();
+                String specialText = specialLabelUnit.getText();
                 if (TextUtils.isEmpty(specialText)) continue;
 
                 specialLabelUnit.setClickable(true);
@@ -522,7 +510,7 @@ public class SimplifySpanBuild {
         }
 
         String finalStr = tempStrBuild.toString();
-        specialClickableUnit.setSpecialText(finalStr);
+        specialClickableUnit.setText(finalStr);
         specialClickableUnit.setStartPoss(new int[]{baseStartPos});
         PositionInfo positionInfo = new PositionInfo(baseStartPos, finalStr.length());
         if (isToFirst) {

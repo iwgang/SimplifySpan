@@ -10,22 +10,22 @@ A easy-to-use and powerful Spannable library
 ![](https://raw.githubusercontent.com/iwgang/SimplifySpan/master/screenshot/s3.gif)  
 
 ### gradle
-    compile 'com.github.iwgang:simplifyspan:1.1'
+    compile 'com.github.iwgang:simplifyspan:2.0'
     
 ### Support Units
 * SpecialTextUnit
-    * **specialText** (Constructor | String)
+    * **text** (Constructor | String)
     * **gravity** (setGravity(gravity | int)) SpecialGravity.TOP, SpecialGravity.CENTER, SpecialGravity.BOTTOM
     * **convertMode** (setConvertMode(convertMode | int)) SpecialConvertMode.ONLY_FIRST, SpecialConvertMode.ALL, SpecialConvertMode.ONLY_LAST
-    * **specialTextColor** (Constructor Or setSpecialTextColor(int color))
+    * **textColor** (Constructor Or setTextColor(int color))
     * **textSize** (Constructor Or setTextSize(float size)) ps
-    * **specialTextBackgroundColor** (setSpecialTextBackgroundColor(int color))
+    * **textBackgroundColor** (setTextBackgroundColor(int color))
     * **isShowUnderline** (showUnderline())
     * **isShowStrikeThrough** (showStrikeThrough())
     * **isTextBold** (useTextBold())
-    * **specialClickableUnit** (setSpecialClickableUnit(SpecialClickableUnit))
+    * **clickableUnit** (setClickableUnit(SpecialClickableUnit))
 * SpecialLabelUnit
-    * **specialText** (Constructor | String)
+    * **text** (Constructor | String)
     * **gravity** (setGravity(gravity | int)) SpecialGravity.TOP, SpecialGravity.CENTER, SpecialGravity.BOTTOM
     * **convertMode** (setConvertMode(convertMode | int)) SpecialConvertMode.ONLY_FIRST, SpecialConvertMode.ALL, SpecialConvertMode.ONLY_LAST
     * **labelTextColor** (Constructor | int color)
@@ -39,34 +39,45 @@ A easy-to-use and powerful Spannable library
     * **paddingRight** (setPaddingRight(int padding)) px
     * **labelBgBorderColor** And **borderSize** (showBorder(int labelBgBorderColor, float borderSize | px))
     * **isTextBold** (useTextBold())
-    * **clickable** See SimplifySpanBuild.appendMultiClickableSpecialUnit() Or SimplifySpanBuild.appendMultiClickableSpecialUnitToFirst()
+    * **clickable** See SimplifySpanBuild.appendMultiClickable() Or SimplifySpanBuild.appendMultiClickableToFirst()
 * SpecialImageUnit
-    * **specialText** (Constructor | String)
+    * **text** (Constructor | String)
     * **gravity** (setGravity(gravity | int)) SpecialGravity.TOP, SpecialGravity.CENTER, SpecialGravity.BOTTOM
     * **convertMode** (setConvertMode(convertMode | int)) SpecialConvertMode.ONLY_FIRST, SpecialConvertMode.ALL, SpecialConvertMode.ONLY_LAST
     * **bitmap** (Constructor)
     * **width** And **height** (Constructor) px
-    * **clickable** See SimplifySpanBuild.appendMultiClickableSpecialUnit() Or SimplifySpanBuild.appendMultiClickableSpecialUnitToFirst()
+    * **clickable** See SimplifySpanBuild.appendMultiClickable() Or SimplifySpanBuild.appendMultiClickableToFirst()
+* SpecialClickableUnit
+    * **curTextView** (Constructor | TextView)
+    * **onClickListener** (Constructor | OnClickableSpanListener)
+    * **isShowUnderline** (showUnderline())
+    * **pressTextColor** (setPressTextColor(int color))
+    * **pressBgColor** (setPressBgColor(int color))
+    * **normalTextColor** (setNormalTextColor(int color))
+    * **normalBgColor** (setNormalBgColor(int color))
 * SpecialRawSpanUnit
-    * **specialText** (Constructor | String)
+    * **text** (Constructor | String)
     * **spanObj** (Constructor) Spannable Object
     * **flags** (Constructor | int) Spannable flags
     
 ### Support Methods
 * SimplifySpanBuild
-    * **appendSpecialUnit** () 
-    * **appendSpecialUnitToFirst** ()
-    * **appendNormalText** ()
-    * **appendNormalTextToFirst** ()
-    * **appendMultiClickableSpecialUnit** ()
-    * **appendMultiClickableSpecialUnitToFirst** ()
+    * **append** (string | Units)
+    * **appendToFirst** (string | Units)
+    * **appendMultiClickable** ()
+    * **appendMultiClickableToFirst** ()
     * **build** ()
 
 ### how to use ?
 [Sample Code](https://github.com/iwgang/SimplifySpan/blob/master/app/src/main/java/cn/iwgang/simplifyspandemo/MainActivity.java)
 ```
-SimplifySpanBuild simplifySpanBuild = new SimplifySpanBuild(this, textView, " 艾客优品雷霆Dock 2 雷电转USB3.0/火线/esata 扩展HUB");
-simplifySpanBuild.appendSpecialUnitToFirst(new SpecialLabelUnit("1212", Color.WHITE, 8, Color.RED, 70,35).useTextBold().setGravity(SpecialGravity.CENTER))
-                 .appendSpecialUnitToFirst(new SpecialLabelUnit("天猫", Color.WHITE, 8, 0xFFFF5000, 60, 35).setGravity(SpecialGravity.CENTER));
-textView.setText(simplifySpanBuild.build());
+// sample 1
+tvText.setText(new SimplifySpanBuild("距离您：").append(new SpecialTextUnit("385", Color.BLUE)).append(" 米").build());
+
+// sample 2
+CharSequence spannableString = new SimplifySpanBuild(" 艾客优品雷霆Dock 2 雷电转USB3.0/火线/esata 扩展HUB")
+        .appendToFirst(new SpecialLabelUnit("1212", Color.WHITE, sp2px(8), Color.RED, 70, 35).useTextBold().setGravity(SpecialGravity.CENTER))
+        .appendToFirst(new SpecialLabelUnit("天猫", Color.WHITE, sp2px(8), 0xFFFF5000, 60, 35).setGravity(SpecialGravity.CENTER))
+        .build();
+tvText.setText(spannableString);
 ```

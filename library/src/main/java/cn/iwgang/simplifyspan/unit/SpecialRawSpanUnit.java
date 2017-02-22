@@ -11,14 +11,14 @@ public class SpecialRawSpanUnit extends BaseSpecialUnit {
     private Object spanObj;
     private int flags;
 
-    public SpecialRawSpanUnit(String specialText, Object spanObj) {
-        super(specialText);
+    public SpecialRawSpanUnit(String text, Object spanObj) {
+        super(text);
         this.spanObj = spanObj;
         this.flags = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
     }
 
-    public SpecialRawSpanUnit(String specialText, Object spanObj, int flags) {
-        super(specialText);
+    public SpecialRawSpanUnit(String text, Object spanObj, int flags) {
+        super(text);
         this.spanObj = spanObj;
         this.flags = flags;
     }

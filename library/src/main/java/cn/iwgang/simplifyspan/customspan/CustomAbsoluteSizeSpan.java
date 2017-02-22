@@ -16,14 +16,14 @@ public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
     private TextView mTextView;
     private int mGravity;
     private int mOffsetBaselineShift;
-    private String mSpecialText;
+    private String mText;
     private Rect mTextViewRect = new Rect();
-    private Rect mSpecialTextRect = new Rect();
+    private Rect mTextRect = new Rect();
     private String mNormalSizeText;
 
-    public CustomAbsoluteSizeSpan(String normalSizeText, String specialText, int size, TextView textView, int gravity) {
+    public CustomAbsoluteSizeSpan(String normalSizeText, String text, int size, TextView textView, int gravity) {
         super(size, true);
-        mSpecialText = specialText;
+        mText = text;
         mTextView = textView;
         mGravity = gravity;
         mNormalSizeText = normalSizeText;
@@ -36,16 +36,16 @@ public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
         if (mGravity == SpecialGravity.BOTTOM) return;
 
         mTextView.getPaint().getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), mTextViewRect);
-        ds.getTextBounds(mSpecialText, 0, mSpecialText.length(), mSpecialTextRect);
+        ds.getTextBounds(mText, 0, mText.length(), mTextRect);
         int mMainTextHeight = mTextViewRect.height();
 
-        int offset = mTextViewRect.bottom - mSpecialTextRect.bottom;
+        int offset = mTextViewRect.bottom - mTextRect.bottom;
         switch (mGravity) {
             case SpecialGravity.TOP:
-                mOffsetBaselineShift = mMainTextHeight - mSpecialTextRect.height() - offset;
+                mOffsetBaselineShift = mMainTextHeight - mTextRect.height() - offset;
                 break;
             case SpecialGravity.CENTER:
-                mOffsetBaselineShift = mMainTextHeight / 2 - mSpecialTextRect.height() / 2 - offset;
+                mOffsetBaselineShift = mMainTextHeight / 2 - mTextRect.height() / 2 - offset;
                 break;
         }
 

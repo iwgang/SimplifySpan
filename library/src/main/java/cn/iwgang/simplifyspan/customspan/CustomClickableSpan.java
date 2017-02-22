@@ -35,7 +35,7 @@ public class CustomClickableSpan extends ClickableSpan {
         mBgColorPre = specialClickableUnit.getPressBgColor();
         isShowUnderline = specialClickableUnit.isShowUnderline();
         mOnClickableSpanListener = specialClickableUnit.getOnClickListener();
-        this.mOnClickStateChangeListeners = specialClickableUnit.getOnClickStateChangeListeners();
+        mOnClickStateChangeListeners = specialClickableUnit.getOnClickStateChangeListeners();
     }
 
     @Override
