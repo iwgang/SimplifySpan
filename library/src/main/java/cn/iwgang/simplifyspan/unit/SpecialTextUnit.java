@@ -1,5 +1,6 @@
 package cn.iwgang.simplifyspan.unit;
 
+import android.graphics.Typeface;
 import android.widget.TextView;
 
 /**
@@ -8,6 +9,7 @@ import android.widget.TextView;
  * https://github.com/iwgang/SimplifySpan
  */
 public class SpecialTextUnit extends BaseSpecialUnit {
+    private int textStyle = Typeface.NORMAL;
     private int textColor;
     private int textBackgroundColor;
     private float textSize; // sp
@@ -80,12 +82,24 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     }
 
     /**
+     * Deprecated, please use {@link #setTextStyle}
      * Use Text Bold
      *
      * @return SpecialTextUnit
      */
+    @Deprecated
     public SpecialTextUnit useTextBold() {
         isTextBold = true;
+        return this;
+    }
+
+    /**
+     * Use TextView support textStyle
+     * @param textStyle please see {@link Typeface}
+     * @return SpecialTextUnit
+     */
+    public SpecialTextUnit setTextStyle(int textStyle) {
+        this.textStyle = textStyle;
         return this;
     }
 
@@ -179,6 +193,10 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     public boolean isTextBold() {
         return isTextBold;
+    }
+
+    public int getTextStyle() {
+        return textStyle;
     }
 
     public TextView getCurTextView() {

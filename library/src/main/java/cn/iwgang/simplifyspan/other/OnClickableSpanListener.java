@@ -9,6 +9,6 @@ import android.widget.TextView;
  */
 public interface OnClickableSpanListener {
 
-    void onClick(TextView tv, String clickText);
+    void onClick(TextView tv, String clickText, Object tag);
 
 }

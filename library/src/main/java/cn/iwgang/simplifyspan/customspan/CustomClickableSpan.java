@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,8 +28,10 @@ public class CustomClickableSpan extends ClickableSpan {
     private int mTextColorPre;
     private int mBgColorNor;
     private int mBgColorPre;
+    private Object tag;
 
     public CustomClickableSpan(SpecialClickableUnit specialClickableUnit) {
+        tag = specialClickableUnit.getTag();
         mTextColorNor = specialClickableUnit.getNormalTextColor();
         mTextColorPre = specialClickableUnit.getPressTextColor();
         mBgColorNor = specialClickableUnit.getNormalBgColor();
@@ -45,7 +48,7 @@ public class CustomClickableSpan extends ClickableSpan {
             Spanned spanned = (Spanned)tv.getText();
             int start = spanned.getSpanStart(this);
             int end = spanned.getSpanEnd(this);
-            mOnClickableSpanListener.onClick(tv, spanned.subSequence(start, end).toString());
+            mOnClickableSpanListener.onClick(tv, spanned.subSequence(start, end).toString(), tag);
         }
     }
 
