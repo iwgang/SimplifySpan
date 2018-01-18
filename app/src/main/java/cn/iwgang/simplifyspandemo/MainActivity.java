@@ -5,12 +5,15 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.iwgang.simplifyspan.SimplifySpanBuild;
+import cn.iwgang.simplifyspan.customspan.CustomClickableSpan;
 import cn.iwgang.simplifyspan.other.OnClickableSpanListener;
-import cn.iwgang.simplifyspan.other.SpecialConvertMode;
 import cn.iwgang.simplifyspan.other.SpecialGravity;
 import cn.iwgang.simplifyspan.unit.SpecialClickableUnit;
 import cn.iwgang.simplifyspan.unit.SpecialImageUnit;
@@ -155,8 +158,12 @@ public class MainActivity extends AppCompatActivity implements OnClickableSpanLi
     }
 
     @Override
-    public void onClick(TextView tv, String clickText, Object tag) {
-        Toast.makeText(MainActivity.this, "Click Text: " + clickText +"  tag: " + tag, Toast.LENGTH_SHORT).show();
+    public void onClick(TextView tv, CustomClickableSpan clickableSpan) {
+        Toast.makeText(MainActivity.this, "Click Text: " + clickableSpan.getClickText()
+                        + "  tag: " + clickableSpan.getTag()
+                        + "  StartSpanIndex: " + clickableSpan.getStartSpanIndex()
+                        + "  EndSpanIndex: " + clickableSpan.getEndSpanIndex()
+                , Toast.LENGTH_SHORT).show();
     }
 
     private float sp2px(float spValue) {
