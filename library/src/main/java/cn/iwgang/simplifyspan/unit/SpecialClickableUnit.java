@@ -22,6 +22,7 @@ public class SpecialClickableUnit extends BaseSpecialUnit {
     private boolean isShowUnderline;
     private int normalTextColor;
     private int pressTextColor;
+    private Object tag;
 
     public SpecialClickableUnit(TextView curTextView, OnClickableSpanListener onClickListener) {
         super(null);
@@ -104,4 +105,12 @@ public class SpecialClickableUnit extends BaseSpecialUnit {
         this.text = text;
     }
 
+    public Object getTag() {
+        return tag;
+    }
+
+    public SpecialClickableUnit setTag(Object tag) {
+        this.tag = tag;
+        return this;
+    }
 }

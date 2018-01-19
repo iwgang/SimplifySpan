@@ -349,6 +349,11 @@ public class SimplifySpanBuild {
                         spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
 
+                    //Set Text Style
+                    if (specialTextUnit.getTextStyle() != Typeface.NORMAL){
+                        spannableStringBuilder.setSpan(new StyleSpan(specialTextUnit.getTextStyle()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
                     // Set Text Size
                     if (specialTextUnit.getTextSize() > 0) {
                         TextView curTextView = specialTextUnit.getCurTextView();

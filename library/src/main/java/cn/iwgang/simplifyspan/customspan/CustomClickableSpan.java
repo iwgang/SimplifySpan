@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,8 +28,13 @@ public class CustomClickableSpan extends ClickableSpan {
     private int mTextColorPre;
     private int mBgColorNor;
     private int mBgColorPre;
+    private Object tag;
+    private String clickText;
+    private int startSpanIndex;
+    private int endSpanIndex;
 
     public CustomClickableSpan(SpecialClickableUnit specialClickableUnit) {
+        setTag(specialClickableUnit.getTag());
         mTextColorNor = specialClickableUnit.getNormalTextColor();
         mTextColorPre = specialClickableUnit.getPressTextColor();
         mBgColorNor = specialClickableUnit.getNormalBgColor();
@@ -43,9 +49,10 @@ public class CustomClickableSpan extends ClickableSpan {
         if (null != mOnClickableSpanListener) {
             TextView tv = (TextView)widget;
             Spanned spanned = (Spanned)tv.getText();
-            int start = spanned.getSpanStart(this);
-            int end = spanned.getSpanEnd(this);
-            mOnClickableSpanListener.onClick(tv, spanned.subSequence(start, end).toString());
+            startSpanIndex = spanned.getSpanStart(this);
+            endSpanIndex = spanned.getSpanEnd(this);
+            clickText = spanned.subSequence(startSpanIndex, endSpanIndex).toString();
+            mOnClickableSpanListener.onClick(tv, this);
         }
     }
 
@@ -83,4 +90,28 @@ public class CustomClickableSpan extends ClickableSpan {
             ds.setUnderlineText(false);
         }
     }
+
+    public Object getTag() {
+        return tag;
+    }
+
+    public void setTag(Object tag) {
+        this.tag = tag;
+    }
+
+    //get current click text
+    public String getClickText(){
+        return clickText;
+    }
+
+    //get current click text span start index in total
+    public int getStartSpanIndex() {
+        return startSpanIndex;
+    }
+
+    //get current click text span start index in end
+    public int getEndSpanIndex() {
+        return endSpanIndex;
+    }
+
 }

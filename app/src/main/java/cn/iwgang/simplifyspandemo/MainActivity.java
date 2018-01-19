@@ -2,14 +2,18 @@ package cn.iwgang.simplifyspandemo;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.iwgang.simplifyspan.SimplifySpanBuild;
+import cn.iwgang.simplifyspan.customspan.CustomClickableSpan;
 import cn.iwgang.simplifyspan.other.OnClickableSpanListener;
-import cn.iwgang.simplifyspan.other.SpecialConvertMode;
 import cn.iwgang.simplifyspan.other.SpecialGravity;
 import cn.iwgang.simplifyspan.unit.SpecialClickableUnit;
 import cn.iwgang.simplifyspan.unit.SpecialImageUnit;
@@ -73,12 +77,18 @@ public class MainActivity extends AppCompatActivity implements OnClickableSpanLi
         tvText11.setText(simplifySpanBuild11.build());
 
 
-        SimplifySpanBuild simplifySpanBuild2 = new SimplifySpanBuild("替换所有张字的颜色及字体大小并加粗，张歆艺、张馨予、张嘉倪、张涵予、张含韵、张韶涵、张嘉译、张佳宁、大张伟", new SpecialTextUnit("张").useTextBold().setTextSize(20).setTextColor(0xFFFFA500).setConvertMode(SpecialConvertMode.ALL));
-        tvText2.setText(simplifySpanBuild2.build());
-
-
         SimplifySpanBuild simplifySpanBuild21 = new SimplifySpanBuild();
-        simplifySpanBuild21.append(new SpecialTextUnit("居中").setTextSize(12).setGravity(tvText21, SpecialGravity.CENTER).setTextColor(Color.BLUE))
+        simplifySpanBuild21
+                .append(new SpecialTextUnit("正常字体").setTextSize(18).setTextStyle(Typeface.NORMAL))
+                .append(new SpecialTextUnit("粗体").setTextSize(18).setTextStyle(Typeface.BOLD))
+                .append(new SpecialTextUnit("斜体").setTextSize(18).setTextStyle(Typeface.ITALIC))
+                .append(new SpecialTextUnit("粗斜体").setTextSize(18).setTextStyle(Typeface.BOLD_ITALIC))
+                .append(new SpecialTextUnit("黑体").setTextSize(18).setTextStyle(Typeface.DEFAULT_BOLD.getStyle()))
+                .append(new SpecialTextUnit("等宽1字体").setTextSize(18).setTextStyle(Typeface.MONOSPACE.getStyle()))
+                .append(new SpecialTextUnit("Sans Serif字体").setTextSize(18).setTextStyle(Typeface.SANS_SERIF.getStyle()))
+                .append(new SpecialTextUnit("Serif字体").setTextSize(18).setTextStyle(Typeface.SERIF.getStyle()))
+                .append("\n")
+                .append(new SpecialTextUnit("居中").setTextSize(12).setGravity(tvText21, SpecialGravity.CENTER).setTextColor(Color.BLUE))
                 .append("正常")
                 .append(new SpecialTextUnit("顶部").setTextSize(12).setGravity(tvText21, SpecialGravity.TOP).setTextColor(0xFFFF5000))
                 .append("正常")
@@ -89,9 +99,10 @@ public class MainActivity extends AppCompatActivity implements OnClickableSpanLi
         SimplifySpanBuild simplifySpanBuild22 = new SimplifySpanBuild("正常底部正常居中正常顶部正常",
                 new SpecialTextUnit("底部").setTextSize(30).setTextColor(Color.BLUE),
                 new SpecialTextUnit("居中").setTextSize(30).setGravity(tvText22, SpecialGravity.CENTER).setTextColor(0xFFB03060),
-                new SpecialTextUnit("顶部").setTextSize(30).setGravity(tvText22, SpecialGravity.TOP).setTextColor(0xFFB0C4DE));
-        tvText22.setText(simplifySpanBuild22.build());
+                new SpecialTextUnit("顶部").setTextSize(30).setGravity(tvText22, SpecialGravity.TOP).setTextColor(0xFFB0C4DE)
 
+        );
+        tvText22.setText(simplifySpanBuild22.build());
 
         SimplifySpanBuild simplifySpanBuild3 = new SimplifySpanBuild();
         simplifySpanBuild3.append(new SpecialImageUnit(this, BitmapFactory.decodeResource(getResources(), R.drawable.ic_bulletin), 50, 50).setGravity(SpecialGravity.CENTER))
@@ -121,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements OnClickableSpanLi
         simplifySpanBuild4.append("完整文章见 ");
         simplifySpanBuild4.appendMultiClickable(new SpecialClickableUnit(tvText4, this).setNormalTextColor(linkNorTextColor).setPressBgColor(linkPressBgColor),
                 new SpecialImageUnit(this, BitmapFactory.decodeResource(getResources(), R.drawable.timeline_card_small_article), 30, 30).setGravity(SpecialGravity.CENTER),
-                new SpecialTextUnit("LOL超强攻略,不见绝对后悔 "));
+                new SpecialTextUnit("LOL超强攻略,不见绝对后悔 ").showUnderline());
         simplifySpanBuild4.append(" 更多好玩的内容请点击 ");
         simplifySpanBuild4.appendMultiClickable(new SpecialClickableUnit(tvText4, this).setNormalTextColor(linkNorTextColor).setPressBgColor(linkPressBgColor),
                 new SpecialImageUnit(this, BitmapFactory.decodeResource(getResources(), R.drawable.timeline_card_small_web), 42, 42).setGravity(SpecialGravity.CENTER),
@@ -137,18 +148,22 @@ public class MainActivity extends AppCompatActivity implements OnClickableSpanLi
 
         SimplifySpanBuild simplifySpanBuild41 = new SimplifySpanBuild();
         simplifySpanBuild41.append("无默认背景")
-                .append(new SpecialTextUnit("点我点我1").setClickableUnit(new SpecialClickableUnit(tvText41, this).setPressBgColor(0xFFFF5000)).setTextColor(Color.BLUE))
+                .append(new SpecialTextUnit("点我点我1").setClickableUnit(new SpecialClickableUnit(tvText41, this).setTag("1").setPressBgColor(0xFFFF5000)).setTextColor(Color.BLUE))
                 .append("无默认背景显示下划线")
-                .append(new SpecialTextUnit("点我点我2").setClickableUnit(new SpecialClickableUnit(tvText41, this).showUnderline().setPressBgColor(0xFFFF5000).setPressTextColor(Color.WHITE)).setTextColor(0xFFFF5000))
+                .append(new SpecialTextUnit("点我点我2").setClickableUnit(new SpecialClickableUnit(tvText41, this).setTag("2").showUnderline().setPressBgColor(0xFFFF5000).setPressTextColor(Color.WHITE)).setTextColor(0xFFFF5000))
                 .append("有默认背景")
-                .append(new SpecialTextUnit("点我点我3").setClickableUnit(new SpecialClickableUnit(tvText41, this).setPressBgColor(Color.BLUE).setPressTextColor(Color.WHITE)).setTextColor(0xFFFF5000).setTextBackgroundColor(0xFF87CEEB))
+                .append(new SpecialTextUnit("点我点我3").setClickableUnit(new SpecialClickableUnit(tvText41, this).setTag("3").setPressBgColor(Color.BLUE).setPressTextColor(Color.WHITE)).setTextColor(0xFFFF5000).setTextBackgroundColor(0xFF87CEEB))
                 .append("我只是个结尾");
         tvText41.setText(simplifySpanBuild41.build());
     }
 
     @Override
-    public void onClick(TextView tv, String clickText) {
-        Toast.makeText(MainActivity.this, "Click Text: " + clickText, Toast.LENGTH_SHORT).show();
+    public void onClick(TextView tv, CustomClickableSpan clickableSpan) {
+        Toast.makeText(MainActivity.this, "Click Text: " + clickableSpan.getClickText()
+                        + "  tag: " + clickableSpan.getTag()
+                        + "  StartSpanIndex: " + clickableSpan.getStartSpanIndex()
+                        + "  EndSpanIndex: " + clickableSpan.getEndSpanIndex()
+                , Toast.LENGTH_SHORT).show();
     }
 
     private float sp2px(float spValue) {

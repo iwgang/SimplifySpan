@@ -1,6 +1,9 @@
 package cn.iwgang.simplifyspan.other;
 
+import android.text.style.ClickableSpan;
 import android.widget.TextView;
+
+import cn.iwgang.simplifyspan.customspan.CustomClickableSpan;
 
 /**
  * ClickableSpan Listener
@@ -9,6 +12,6 @@ import android.widget.TextView;
  */
 public interface OnClickableSpanListener {
 
-    void onClick(TextView tv, String clickText);
+    void onClick(TextView tv, CustomClickableSpan clickableSpan);
 
 }
