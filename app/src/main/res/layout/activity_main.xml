@@ -73,15 +73,6 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/tv_text22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="10dp"
-            android:textSize="12sp" />
-
-        <TextView
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="#e1dede"

@@ -349,8 +349,13 @@ public class SimplifySpanBuild {
                         spannableStringBuilder.setSpan(new StyleSpan(Typeface.BOLD), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
 
-                    //Set Text Style
-                    if (specialTextUnit.getTextStyle() != Typeface.NORMAL){
+                    // Set Text Italic
+                    if (specialTextUnit.isTextItalic()) {
+                        spannableStringBuilder.setSpan(new StyleSpan(Typeface.ITALIC), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    // Set Text Style
+                    if (specialTextUnit.getTextStyle() != Typeface.NORMAL) {
                         spannableStringBuilder.setSpan(new StyleSpan(specialTextUnit.getTextStyle()), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
 

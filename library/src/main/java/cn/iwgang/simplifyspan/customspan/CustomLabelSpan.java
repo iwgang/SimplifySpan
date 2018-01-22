@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.media.ThumbnailUtils;
 import android.text.style.ReplacementSpan;
 
@@ -64,7 +65,8 @@ public class CustomLabelSpan extends ReplacementSpan implements OnClickStateChan
     }
 
     private void initPadding() {
-        if (mSpecialLabelUnit.getLabelBgHeight() > 0 || mSpecialLabelUnit.getLabelBgWidth() > 0) return ;
+        if (mSpecialLabelUnit.getLabelBgHeight() > 0 || mSpecialLabelUnit.getLabelBgWidth() > 0)
+            return;
 
         int allPadding = mSpecialLabelUnit.getPadding();
 
@@ -85,7 +87,8 @@ public class CustomLabelSpan extends ReplacementSpan implements OnClickStateChan
             mPaddingRight = allPadding;
         }
 
-        if (mPaddingTop > 0 || mPaddingBottom > 0 || mPaddingLeft > 0 || mPaddingRight > 0) isLabelBgCenter = false;
+        if (mPaddingTop > 0 || mPaddingBottom > 0 || mPaddingLeft > 0 || mPaddingRight > 0)
+            isLabelBgCenter = false;
     }
 
     @Override
@@ -203,7 +206,13 @@ public class CustomLabelSpan extends ReplacementSpan implements OnClickStateChan
         } else {
             newTextX = x + mPaddingLeft;
         }
-        if (mSpecialLabelUnit.isTextBold()) paint.setFakeBoldText(true);
+
+        if (mSpecialLabelUnit.isTextBold())
+            paint.setFakeBoldText(true);
+
+        if (mSpecialLabelUnit.isTextItalic())
+            paint.setTypeface(Typeface.create((String) null, Typeface.ITALIC));
+
         canvas.drawText(mSpecialText, newTextX, newTextY, paint);
     }
 

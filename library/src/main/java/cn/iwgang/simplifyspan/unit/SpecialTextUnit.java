@@ -16,6 +16,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     private boolean isShowUnderline;
     private boolean isShowStrikeThrough;
     private boolean isTextBold;
+    private boolean isTextItalic;
     private SpecialClickableUnit specialClickableUnit;
     private TextView curTextView;
 
@@ -82,19 +83,28 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     }
 
     /**
-     * Deprecated, please use {@link #setTextStyle}
      * Use Text Bold
      *
      * @return SpecialTextUnit
      */
-    @Deprecated
     public SpecialTextUnit useTextBold() {
         isTextBold = true;
         return this;
     }
 
     /**
+     * Use Text Italic
+     *
+     * @return SpecialTextUnit
+     */
+    public SpecialTextUnit useTextItalic() {
+        isTextItalic = true;
+        return this;
+    }
+
+    /**
      * Use TextView support textStyle
+     *
      * @param textStyle please see {@link Typeface}
      * @return SpecialTextUnit
      */
@@ -193,6 +203,10 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     public boolean isTextBold() {
         return isTextBold;
+    }
+
+    public boolean isTextItalic() {
+        return isTextItalic;
     }
 
     public int getTextStyle() {

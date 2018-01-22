@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,13 +27,13 @@ public class CustomClickableSpan extends ClickableSpan {
     private int mTextColorPre;
     private int mBgColorNor;
     private int mBgColorPre;
-    private Object tag;
-    private String clickText;
-    private int startSpanIndex;
-    private int endSpanIndex;
+    private Object mTag;
+    private String mClickText;
+    private int mStartSpanIndex;
+    private int mEndSpanIndex;
 
     public CustomClickableSpan(SpecialClickableUnit specialClickableUnit) {
-        setTag(specialClickableUnit.getTag());
+        mTag = specialClickableUnit.getTag();
         mTextColorNor = specialClickableUnit.getNormalTextColor();
         mTextColorPre = specialClickableUnit.getPressTextColor();
         mBgColorNor = specialClickableUnit.getNormalBgColor();
@@ -47,11 +46,11 @@ public class CustomClickableSpan extends ClickableSpan {
     @Override
     public void onClick(View widget) {
         if (null != mOnClickableSpanListener) {
-            TextView tv = (TextView)widget;
-            Spanned spanned = (Spanned)tv.getText();
-            startSpanIndex = spanned.getSpanStart(this);
-            endSpanIndex = spanned.getSpanEnd(this);
-            clickText = spanned.subSequence(startSpanIndex, endSpanIndex).toString();
+            TextView tv = (TextView) widget;
+            Spanned spanned = (Spanned) tv.getText();
+            mStartSpanIndex = spanned.getSpanStart(this);
+            mEndSpanIndex = spanned.getSpanEnd(this);
+            mClickText = spanned.subSequence(mStartSpanIndex, mEndSpanIndex).toString();
             mOnClickableSpanListener.onClick(tv, this);
         }
     }
@@ -91,27 +90,32 @@ public class CustomClickableSpan extends ClickableSpan {
         }
     }
 
+    /**
+     * get tag
+     */
     public Object getTag() {
-        return tag;
+        return mTag;
     }
 
-    public void setTag(Object tag) {
-        this.tag = tag;
+    /**
+     * get current click text
+     */
+    public String getClickText() {
+        return mClickText;
     }
 
-    //get current click text
-    public String getClickText(){
-        return clickText;
-    }
-
-    //get current click text span start index in total
+    /**
+     * get current click text span start index in total
+     */
     public int getStartSpanIndex() {
-        return startSpanIndex;
+        return mStartSpanIndex;
     }
 
-    //get current click text span start index in end
+    /**
+     * get current click text span start index in end
+     */
     public int getEndSpanIndex() {
-        return endSpanIndex;
+        return mEndSpanIndex;
     }
 
 }

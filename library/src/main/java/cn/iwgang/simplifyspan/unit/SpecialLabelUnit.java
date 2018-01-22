@@ -1,6 +1,7 @@
 package cn.iwgang.simplifyspan.unit;
 
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 
 /**
  * Label Special Unit
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
  * https://github.com/iwgang/SimplifySpan
  */
 public class SpecialLabelUnit extends BaseSpecialUnit {
+    private int textStyle = Typeface.NORMAL;
     private int labelTextColor;
     private float labelTextSize; // sp
     private Bitmap mBitmap;
@@ -22,6 +24,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
     private int labelBgBorderColor;
     private boolean isShowBorder;
     private boolean isTextBold;
+    private boolean isTextItalic;
     private boolean isClickable;
     private int bgColor;
 
@@ -125,6 +128,22 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
 
     public SpecialLabelUnit useTextBold() {
         isTextBold = true;
+        return this;
+    }
+
+    public SpecialLabelUnit useTextItalic() {
+        isTextItalic = true;
+        return this;
+    }
+
+    /**
+     * Use TextView support textStyle
+     *
+     * @param textStyle please see {@link Typeface}
+     * @return SpecialTextUnit
+     */
+    public SpecialLabelUnit setTextStyle(int textStyle) {
+        this.textStyle = textStyle;
         return this;
     }
 
@@ -232,5 +251,14 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
     public int getBgColor() {
         return bgColor;
     }
+
+    public boolean isTextItalic() {
+        return isTextItalic;
+    }
+
+    public int getTextStyle() {
+        return textStyle;
+    }
+
 
 }

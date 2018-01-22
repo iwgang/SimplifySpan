@@ -10,7 +10,7 @@ A easy-to-use and powerful Spannable library
 ![](https://raw.githubusercontent.com/iwgang/SimplifySpan/master/screenshot/s3.gif)  
 
 ### gradle
-    compile 'com.github.iwgang:simplifyspan:2.0'
+    compile 'com.github.iwgang:simplifyspan:2.1'
     
 ### Support Units
 * SpecialTextUnit
@@ -19,10 +19,12 @@ A easy-to-use and powerful Spannable library
     * **convertMode** (setConvertMode(convertMode | int)) SpecialConvertMode.ONLY_FIRST, SpecialConvertMode.ALL, SpecialConvertMode.ONLY_LAST
     * **textColor** (Constructor Or setTextColor(int color))
     * **textSize** (Constructor Or setTextSize(float size)) ps
-    * **textBackgroundColor** (setTextBackgroundColor(int color))
-    * **isShowUnderline** (showUnderline())
-    * **isShowStrikeThrough** (showStrikeThrough())
-    * **isTextBold** (useTextBold())
+    * **backgroundColor** (setTextBackgroundColor(int color))
+    * **showUnderline** (showUnderline())
+    * **showStrikeThrough** (showStrikeThrough())
+    * **textBold** (useTextBold())
+    * **textItalic** (useTextItalic())
+    * **textStyle** (setTextStyle(Typeface style))
     * **clickableUnit** (setClickableUnit(SpecialClickableUnit))
 * SpecialLabelUnit
     * **text** (Constructor | String)
@@ -38,7 +40,8 @@ A easy-to-use and powerful Spannable library
     * **paddingLeft** (setPaddingLeft(int padding)) px
     * **paddingRight** (setPaddingRight(int padding)) px
     * **labelBgBorderColor** And **borderSize** (showBorder(int labelBgBorderColor, float borderSize | px))
-    * **isTextBold** (useTextBold())
+    * **textBold** (useTextBold())
+    * **textItalic** (useTextItalic())
     * **clickable** See SimplifySpanBuild.appendMultiClickable() Or SimplifySpanBuild.appendMultiClickableToFirst()
 * SpecialImageUnit
     * **text** (Constructor | String)
