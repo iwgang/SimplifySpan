@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.media.ThumbnailUtils;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
@@ -361,10 +362,10 @@ public class SimplifySpanBuild {
 
                     // Set Text Size
                     if (specialTextUnit.getTextSize() > 0) {
-                        TextView curTextView = specialTextUnit.getCurTextView();
+                        TextPaint curTextPaint = specialTextUnit.getCurTextPaint();
                         int gravity = specialTextUnit.getGravity();
-                        if (gravity != SpecialGravity.BOTTOM && null != curTextView) {
-                            spannableStringBuilder.setSpan(new CustomAbsoluteSizeSpan(normalSizeText, specialTextUnit.getText(), Math.round(specialTextUnit.getTextSize()), curTextView, gravity), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        if (gravity != SpecialGravity.BOTTOM && null != curTextPaint) {
+                            spannableStringBuilder.setSpan(new CustomAbsoluteSizeSpan(normalSizeText, specialTextUnit.getText(), Math.round(specialTextUnit.getTextSize()), curTextPaint, gravity), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         } else {
                             spannableStringBuilder.setSpan(new AbsoluteSizeSpan(Math.round(specialTextUnit.getTextSize()), true), startPos, startPos + specialTextLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }

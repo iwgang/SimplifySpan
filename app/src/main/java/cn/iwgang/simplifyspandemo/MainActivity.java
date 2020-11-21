@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnClickableSpanLi
                 .append(new SpecialTextUnit("Sans Serif字体").setTextSize(18).setTextStyle(Typeface.SANS_SERIF.getStyle()))
                 .append(new SpecialTextUnit("Serif字体").setTextSize(18).setTextStyle(Typeface.SERIF.getStyle()))
                 .append("\n")
-                .append(new SpecialTextUnit("居中").setTextSize(12).setGravity(tvText21, SpecialGravity.CENTER).setTextColor(Color.BLUE))
+                .append(new SpecialTextUnit("居中").setTextSize(12).setGravity(tvText21.getPaint(), SpecialGravity.CENTER).setTextColor(Color.BLUE))
                 .append("正常")
                 .append(new SpecialTextUnit("顶部").setTextSize(12).setGravity(tvText21, SpecialGravity.TOP).setTextColor(0xFFFF5000))
                 .append("正常")

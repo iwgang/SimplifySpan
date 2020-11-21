@@ -13,7 +13,7 @@ import cn.iwgang.simplifyspan.other.SpecialGravity;
  * https://github.com/iwgang/SimplifySpan
  */
 public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
-    private TextView mTextView;
+    private TextPaint mTextPaint;
     private int mGravity;
     private int mOffsetBaselineShift;
     private String mText;
@@ -21,10 +21,10 @@ public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
     private Rect mTextRect = new Rect();
     private String mNormalSizeText;
 
-    public CustomAbsoluteSizeSpan(String normalSizeText, String text, int size, TextView textView, int gravity) {
+    public CustomAbsoluteSizeSpan(String normalSizeText, String text, int size, TextPaint textView, int gravity) {
         super(size, true);
         mText = text;
-        mTextView = textView;
+        mTextPaint = textView;
         mGravity = gravity;
         mNormalSizeText = normalSizeText;
     }
@@ -35,7 +35,7 @@ public class CustomAbsoluteSizeSpan extends AbsoluteSizeSpan {
 
         if (mGravity == SpecialGravity.BOTTOM) return;
 
-        mTextView.getPaint().getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), mTextViewRect);
+        mTextPaint.getTextBounds(mNormalSizeText, 0, mNormalSizeText.length(), mTextViewRect);
         ds.getTextBounds(mText, 0, mText.length(), mTextRect);
         int mMainTextHeight = mTextViewRect.height();
 
