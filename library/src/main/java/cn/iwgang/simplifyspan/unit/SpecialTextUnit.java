@@ -1,6 +1,7 @@
 package cn.iwgang.simplifyspan.unit;
 
 import android.graphics.Typeface;
+import android.text.TextPaint;
 import android.widget.TextView;
 
 /**
@@ -19,6 +20,7 @@ public class SpecialTextUnit extends BaseSpecialUnit {
     private boolean isTextItalic;
     private SpecialClickableUnit specialClickableUnit;
     private TextView curTextView;
+    private TextPaint curTextPaint;
 
     /**
      * @param text text
@@ -60,6 +62,9 @@ public class SpecialTextUnit extends BaseSpecialUnit {
         this.textSize = textSize;
         this.gravity = gravity;
         this.curTextView = curTextView;
+        if (curTextView != null) {
+            this.curTextPaint = curTextView.getPaint();
+        }
     }
 
     /**
@@ -166,6 +171,22 @@ public class SpecialTextUnit extends BaseSpecialUnit {
      */
     public SpecialTextUnit setGravity(TextView curTextView, int gravity) {
         this.curTextView = curTextView;
+        if (curTextView != null) {
+            this.curTextPaint = curTextView.getPaint();
+        }
+        this.gravity = gravity;
+        return this;
+    }
+
+    /**
+     * Set Gravity
+     *
+     * @param curTextPaint current TextView.getTextPaint
+     * @param gravity      use SpecialGravity.xx
+     * @return SpecialTextUnit
+     */
+    public SpecialTextUnit setGravity(TextPaint curTextPaint, int gravity) {
+        this.curTextPaint = curTextPaint;
         this.gravity = gravity;
         return this;
     }
@@ -215,6 +236,10 @@ public class SpecialTextUnit extends BaseSpecialUnit {
 
     public TextView getCurTextView() {
         return curTextView;
+    }
+
+    public TextPaint getCurTextPaint() {
+        return curTextPaint;
     }
 
     public SpecialClickableUnit getSpecialClickableUnit() {
