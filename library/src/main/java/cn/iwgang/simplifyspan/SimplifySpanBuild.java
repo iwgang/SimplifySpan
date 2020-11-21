@@ -236,7 +236,7 @@ public class SimplifySpanBuild {
      *
      * @param specialClickableUnit SpecialClickableUnit
      * @param specialUnitOrStrings Unit Or String
-     * @return
+     * @return SimplifySpanBuild
      */
     public SimplifySpanBuild appendMultiClickable(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
         processMultiClickableSpecialUnit(false, specialClickableUnit, specialUnitOrStrings);
@@ -248,7 +248,7 @@ public class SimplifySpanBuild {
      *
      * @param specialClickableUnit SpecialClickableUnit
      * @param specialUnitOrStrings Unit Or String
-     * @return
+     * @return SimplifySpanBuild
      */
     public SimplifySpanBuild appendMultiClickableToFirst(SpecialClickableUnit specialClickableUnit, Object... specialUnitOrStrings) {
         processMultiClickableSpecialUnit(true, specialClickableUnit, specialUnitOrStrings);

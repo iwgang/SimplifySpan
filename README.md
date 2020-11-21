@@ -10,7 +10,7 @@ A easy-to-use and powerful Spannable library
 ![](https://raw.githubusercontent.com/iwgang/SimplifySpan/master/screenshot/s3.gif)  
 
 ### gradle
-    compile 'com.github.iwgang:simplifyspan:2.1'
+    implementation 'com.github.iwgang:simplifyspan:2.2'
     
 ### Support Units
 * SpecialTextUnit

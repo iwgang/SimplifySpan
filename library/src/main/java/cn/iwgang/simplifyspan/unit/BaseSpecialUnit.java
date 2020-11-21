@@ -32,7 +32,7 @@ public class BaseSpecialUnit {
 
     /**
      * Use only in SimplifySpanBuild
-     * @param startPoss
+     * @param startPoss start poss
      */
     public void setStartPoss(int[] startPoss) {
         this.startPoss = startPoss;

@@ -92,6 +92,7 @@ public class CustomClickableSpan extends ClickableSpan {
 
     /**
      * get tag
+     * @return tag object
      */
     public Object getTag() {
         return mTag;
@@ -99,6 +100,7 @@ public class CustomClickableSpan extends ClickableSpan {
 
     /**
      * get current click text
+     * @return click text
      */
     public String getClickText() {
         return mClickText;
@@ -106,6 +108,7 @@ public class CustomClickableSpan extends ClickableSpan {
 
     /**
      * get current click text span start index in total
+     * @return start span index
      */
     public int getStartSpanIndex() {
         return mStartSpanIndex;
@@ -113,6 +116,7 @@ public class CustomClickableSpan extends ClickableSpan {
 
     /**
      * get current click text span start index in end
+     * @return end span index
      */
     public int getEndSpanIndex() {
         return mEndSpanIndex;

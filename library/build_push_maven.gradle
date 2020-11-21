@@ -28,7 +28,7 @@ afterEvaluate { project ->
         repositories {
             mavenDeployer {
                 //为Pom文件做数字签名
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                beforeDeployment { deployment -> signing.signPom(deployment) }
 
                 pom.groupId = POM_GROUP_ID
                 pom.artifactId = POM_ARTIFACT_ID

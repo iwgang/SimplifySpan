@@ -156,7 +156,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
      * Set Gravity
      *
      * @param gravity use SpecialGravity.xx
-     * @return
+     * @return this
      */
     public SpecialLabelUnit setGravity(int gravity) {
         this.gravity = gravity;
@@ -167,7 +167,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
      * Set Convert Mode
      *
      * @param convertMode use SpecialConvertMode.xx
-     * @return
+     * @return this
      */
     public SpecialLabelUnit setConvertMode(int convertMode) {
         this.convertMode = convertMode;
@@ -222,7 +222,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
     /**
      * Use only in SimplifySpanBuild
      *
-     * @param clickable
+     * @param clickable set clickable
      */
     public void setClickable(boolean clickable) {
         isClickable = clickable;

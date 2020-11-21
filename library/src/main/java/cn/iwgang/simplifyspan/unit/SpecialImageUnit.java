@@ -92,8 +92,8 @@ public class SpecialImageUnit extends BaseSpecialUnit {
 
     /**
      * Set Background Color
-     * @param bgColor
-     * @return
+     * @param bgColor background color
+     * @return this
      */
     public SpecialImageUnit setBgColor(int bgColor) {
         this.bgColor = bgColor;
@@ -103,7 +103,7 @@ public class SpecialImageUnit extends BaseSpecialUnit {
     /**
      * Set Gravity
      * @param gravity use SpecialGravity.xx
-     * @return
+     * @return this
      */
     public SpecialImageUnit setGravity(int gravity) {
         this.gravity = gravity;
@@ -113,7 +113,7 @@ public class SpecialImageUnit extends BaseSpecialUnit {
     /**
      * Set Convert Mode
      * @param convertMode use SpecialConvertMode.xx
-     * @return
+     * @return this
      */
     public SpecialImageUnit setConvertMode(int convertMode) {
         this.convertMode = convertMode;
@@ -126,7 +126,7 @@ public class SpecialImageUnit extends BaseSpecialUnit {
 
     /**
      * Use only in SimplifySpanBuild
-     * @param clickable
+     * @param clickable clickable
      */
     public void setClickable(boolean clickable) {
         isClickable = clickable;
