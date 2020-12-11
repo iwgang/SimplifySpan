@@ -212,7 +212,7 @@ public class CustomLabelSpan extends ReplacementSpan implements OnClickStateChan
 
         if (mSpecialLabelUnit.isTextItalic())
             paint.setTypeface(Typeface.create((String) null, Typeface.ITALIC));
-
+        paint.setStrikeThruText(mSpecialLabelUnit.isShowStrikeThrough());
         canvas.drawText(mSpecialText, newTextX, newTextY, paint);
     }
 

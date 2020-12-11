@@ -26,6 +26,7 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
     private boolean isTextBold;
     private boolean isTextItalic;
     private boolean isClickable;
+    private boolean isShowStrikeThrough;
     private int bgColor;
 
     /**
@@ -259,6 +260,24 @@ public class SpecialLabelUnit extends BaseSpecialUnit {
     public int getTextStyle() {
         return textStyle;
     }
+
+
+
+    /**
+     * Show StrikeThrough
+     *
+     * @return SpecialTextUnit
+     */
+    public SpecialLabelUnit showStrikeThrough() {
+        isShowStrikeThrough = true;
+        return this;
+    }
+
+
+    public boolean isShowStrikeThrough() {
+        return isShowStrikeThrough;
+    }
+
 
 
 }

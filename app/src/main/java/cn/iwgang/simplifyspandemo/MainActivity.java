@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements OnClickableSpanLi
                 .append("正常")
                 .append(new SpecialLabelUnit("原创", Color.RED, sp2px(10), Color.TRANSPARENT).showBorder(Color.BLACK, 2).setPadding(5).setPaddingLeft(10).setPaddingRight(10).setGravity(SpecialGravity.TOP))
                 .append("正常")
-                .append(new SpecialLabelUnit("原创", Color.RED, sp2px(10), Color.TRANSPARENT).showBorder(Color.BLACK, 2).setPadding(5).setPaddingLeft(10).setPaddingRight(10).setGravity(SpecialGravity.CENTER));
+                .append(new SpecialLabelUnit("原创", Color.RED, sp2px(10), Color.TRANSPARENT).showStrikeThrough().showBorder(Color.BLACK, 2).setPadding(5).setPaddingLeft(10).setPaddingRight(10).setGravity(SpecialGravity.CENTER));
         tvText11.setText(simplifySpanBuild11.build());
 
         SimplifySpanBuild simplifySpanBuild2 = new SimplifySpanBuild("替换所有张字的颜色及字体大小并加粗，张歆艺、张馨予、张嘉倪、张涵予、张含韵、张韶涵、张嘉译、张佳宁、大张伟", new SpecialTextUnit("张").useTextBold().setTextSize(20).setTextColor(0xFFFFA500).setConvertMode(SpecialConvertMode.ALL));
